@@ -5,7 +5,7 @@ import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CustomerEntity } from './entities/customer.entity';
 
-@ApiTags('customers')
+@ApiTags('Customers')
 @Controller('customer')
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) { }

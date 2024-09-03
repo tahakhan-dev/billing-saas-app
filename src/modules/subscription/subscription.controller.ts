@@ -6,7 +6,7 @@ import { CreateSubscriptionPlanDto } from './dto/create-subscription.dto';
 import { SubscriptionPlanEntity } from './entities/subscription-plan.entity';
 import { UpdateSubscriptionPlanDto } from './dto/update-subscription.dto';
 
-@ApiTags('subscription')
+@ApiTags('Subscription Plans')
 @Controller('subscription')
 export class SubscriptionController {
   constructor(private readonly subscriptionService: SubscriptionService) { }
