@@ -5,7 +5,7 @@ import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PaymentEntity } from './entities/payment.entity';
 
-@ApiTags('payments')
+@ApiTags('Payments')
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) { }

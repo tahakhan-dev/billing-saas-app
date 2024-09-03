@@ -14,3 +14,9 @@ export enum PaymentStatus {
     SUCCESS = "success",
     FAILED = "failed"
 }
+
+export enum NotificationType {
+    EMAIL = "Email",
+    SMS = "SMS",
+    PUSH = "Push"
+}
