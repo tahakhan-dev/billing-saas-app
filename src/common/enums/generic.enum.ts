@@ -9,3 +9,8 @@ export enum InvoiceStatus {
     PAID = "paid",
     CANCELED = "canceled"
 }
+
+export enum PaymentStatus {
+    SUCCESS = "success",
+    FAILED = "failed"
+}
