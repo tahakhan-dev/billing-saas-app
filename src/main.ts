@@ -5,6 +5,7 @@ import { AppModule } from './app.module';
 import * as cors from 'cors';
 import helmet from 'helmet';
 import 'dotenv/config';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 const cluster = require("cluster")
 
@@ -37,6 +38,17 @@ async function bootstrap() {
 
     // This function enables the automatic handling of shutdown signals or events by registering shutdown hooks in the application.
     app.enableShutdownHooks();
+
+    const config = new DocumentBuilder()
+      .setTitle('SaaS Billing API')
+      .setDescription('API for managing SaaS billing')
+      .setVersion('1.0')
+      .addTag('billing')
+      .build();
+
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
+
 
     await app.listen(APP_PORT, () => {
       console.log(`API GATEWAY IS RUNNING ON ${APP_PORT}`);

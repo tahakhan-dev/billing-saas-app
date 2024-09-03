@@ -1,6 +1,7 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { InvoiceEntity } from 'src/modules/invoice/entities/invoice.entity';
 import { SubscriptionPlanEntity } from 'src/modules/subscription/entities/subscription-plan.entity';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 
 @Entity({ name: 'customer' })
 export class CustomerEntity {
@@ -21,6 +22,8 @@ export class CustomerEntity {
     updated_at: Date;
 
     @ManyToOne(() => SubscriptionPlanEntity, subscriptionPlan => subscriptionPlan.customers)
+    @JoinColumn({ name: 'subscriptionPlanId' }) // This should match the DB column if different
+    @ApiProperty({ type: () => SubscriptionPlanEntity })
     subscriptionPlan: SubscriptionPlanEntity;
 
     @Column({ name: 'subscription_status', nullable: false })
