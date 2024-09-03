@@ -1,34 +1,72 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
-import { CreateSubscriptionDto } from './dto/create-subscription.dto';
-import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+// import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateSubscriptionPlanDto } from './dto/create-subscription.dto';
+import { SubscriptionPlanEntity } from './entities/subscription-plan.entity';
+import { UpdateSubscriptionPlanDto } from './dto/update-subscription.dto';
 
+@ApiTags('subscription')
 @Controller('subscription')
 export class SubscriptionController {
-  constructor(private readonly subscriptionService: SubscriptionService) {}
+  constructor(private readonly subscriptionService: SubscriptionService) { }
 
   @Post()
-  create(@Body() createSubscriptionDto: CreateSubscriptionDto) {
-    return this.subscriptionService.create(createSubscriptionDto);
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Create a new subscription plan' })
+  @ApiResponse({ status: 201, description: 'Subscription plan created successfully.' })
+  @ApiResponse({ status: 409, description: 'Subscription plan already exists.' })
+  async createSubscriptionPlan(@Body() createSubscriptionPlanDto: CreateSubscriptionPlanDto) {
+    const plan = await this.subscriptionService.create(createSubscriptionPlanDto);
+    return plan;
   }
 
   @Get()
-  findAll() {
-    return this.subscriptionService.findAll();
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'List all subscription plans' })
+  @ApiResponse({ status: 200, description: 'Returned all subscription plans successfully', type: [SubscriptionPlanEntity] })
+  async getAllSubscriptionPlans(): Promise<SubscriptionPlanEntity[]> {
+    return await this.subscriptionService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.subscriptionService.findOne(+id);
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Retrieve a specific subscription plan by ID' })
+  @ApiResponse({ status: 200, description: 'Subscription plan retrieved successfully', type: SubscriptionPlanEntity })
+  @ApiResponse({ status: 404, description: 'Subscription plan not found' })
+  @ApiParam({ name: 'id', type: 'number', description: 'Subscription Plan ID' })
+  async getSubscriptionPlanById(@Param('id') id: number): Promise<SubscriptionPlanEntity> {
+    const plan = await this.subscriptionService.findById(id);
+    if (!plan) {
+      throw new NotFoundException(`Subscription plan with ID ${id} not found.`);
+    }
+    return plan;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSubscriptionDto: UpdateSubscriptionDto) {
-    return this.subscriptionService.update(+id, updateSubscriptionDto);
+  @Put('/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Update a subscription plan' })
+  @ApiResponse({ status: 200, description: 'Subscription plan updated successfully.' })
+  @ApiResponse({ status: 404, description: 'Subscription plan not found' })
+  @ApiParam({ name: 'id', type: 'number', description: 'Subscription Plan ID' })
+  async updateSubscriptionPlan(@Param('id') id: number, @Body() updateSubscriptionPlanDto: UpdateSubscriptionPlanDto) {
+    const updatedPlan = await this.subscriptionService.update(id, updateSubscriptionPlanDto);
+    if (!updatedPlan) {
+      throw new NotFoundException(`Subscription plan with ID ${id} not found.`);
+    }
+    return updatedPlan;
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.subscriptionService.remove(+id);
+  @Delete('/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete a subscription plan' })
+  @ApiResponse({ status: 204, description: 'Subscription plan deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Subscription plan not found' })
+  @ApiParam({ name: 'id', type: 'number', description: 'Subscription Plan ID' })
+  async deleteSubscriptionPlan(@Param('id') id: number) {
+    const result = await this.subscriptionService.delete(id);
+    if (!result) {
+      throw new NotFoundException(`Subscription plan with ID ${id} not found.`);
+    }
   }
 }
