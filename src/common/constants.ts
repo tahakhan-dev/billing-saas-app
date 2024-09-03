@@ -42,6 +42,10 @@ export const SYSTEM_CONSTANT = {
   APP_VERSION: '1',
 }
 
+export const jwtConstants = {
+  secret: "secretKey", // Use a strong secret key in production
+};
+
 export const KAFKA_CONSTANTS = {
 
   KAFKA_TOPIC: 'user_service_error',

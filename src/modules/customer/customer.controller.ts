@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put, UseGuards } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CustomerEntity } from './entities/customer.entity';
+import { JwtAuthGuard } from '../auth/jwt-auth.gaurd';
 
 @ApiTags('Customers')
 @Controller('customer')
@@ -18,16 +19,19 @@ export class CustomerController {
   @ApiResponse({ status: 409, description: 'Cutomer Already Exists.' })
 
   async createCustomer(@Body() createCustomerDto: CreateCustomerDto) {
-    console.log(createCustomerDto, '======createCustomerDto=======');
-
-    const customer = await this.customerService.create(createCustomerDto);
+    const { customer, accessToken } = await this.customerService.create(createCustomerDto);
     return {
       statusCode: HttpStatus.CREATED,
       message: 'Customer created successfully',
-      data: customer,
+      data: {
+        customer,
+        accessToken,  // Include the token in the response
+      },
     };
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'List all customers' })
@@ -35,6 +39,9 @@ export class CustomerController {
   async getAllCustomers(): Promise<CustomerEntity[]> {
     return await this.customerService.findAll();
   }
+
+
+  @ApiBearerAuth()
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Retrieve a specific customer by ID' })
@@ -51,6 +58,8 @@ export class CustomerController {
     return customer;
   }
 
+
+  @ApiBearerAuth()
   @Put('/:id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update customer information' })
@@ -65,6 +74,8 @@ export class CustomerController {
     return updatedCustomer;
   }
 
+
+  @ApiBearerAuth()
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a customer' })

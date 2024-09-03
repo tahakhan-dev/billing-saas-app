@@ -5,21 +5,28 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CustomerEntity } from './entities/customer.entity';
 import { Repository } from 'typeorm';
 import { SubscriptionPlanEntity } from '../subscription/entities/subscription-plan.entity';
+import { JwtService } from '@nestjs/jwt';
+import { jwtConstants } from 'src/common/constants';
 
 @Injectable()
 export class CustomerService {
   constructor(
     @InjectRepository(CustomerEntity) private readonly customerRepository: Repository<CustomerEntity>,
+    private jwtService: JwtService,  // Inject the JwtService
     @InjectRepository(SubscriptionPlanEntity) private readonly subscriptionPlanRepository: Repository<SubscriptionPlanEntity>,
 
   ) { }
-  async create(createCustomerDto: CreateCustomerDto): Promise<CustomerEntity> {
+  async create(createCustomerDto: CreateCustomerDto): Promise<{ customer: CustomerEntity, accessToken: string }> {
     const { subscriptionPlanId, email, ...customerDetails } = createCustomerDto;
 
     // Check if customer with the same email already exists
     const existingCustomer = await this.customerRepository.findOne({ where: { email } });
+
     if (existingCustomer) {
-      throw new ConflictException(`A customer with the email ${email} already exists.`);
+      const payload = { email: existingCustomer.email, sub: existingCustomer.id };
+
+      const accessToken = await this.jwtService.signAsync({ ...payload }, { secret: jwtConstants.secret });
+      return { customer: existingCustomer, accessToken };
     }
 
     // Find the subscription plan
@@ -28,6 +35,9 @@ export class CustomerService {
       throw new NotFoundException(`Subscription Plan with ID ${subscriptionPlanId} not found`);
     }
 
+    console.log(subscriptionPlan, '=====subscriptionPlan========');
+
+
     // Create the customer with the resolved subscription plan
     const customer = this.customerRepository.create({
       ...customerDetails,
@@ -35,7 +45,15 @@ export class CustomerService {
       subscriptionPlan: subscriptionPlan  // Assigning the entity, not the ID
     });
 
-    return await this.customerRepository.save(customer);
+    const savedCustomer = await this.customerRepository.save(customer);
+    // Generate JWT token for the newly created customer
+    const payload = { email: savedCustomer.email, sub: savedCustomer.id };
+
+    const accessToken = await this.jwtService.signAsync({ ...payload }, { secret: jwtConstants.secret });
+
+    // Return both the customer details and the JWT token
+    return { customer: customer, accessToken };
+
   }
 
   async findAll(): Promise<CustomerEntity[]> {
@@ -74,5 +92,18 @@ export class CustomerService {
     }
     await this.customerRepository.remove(customer);
     return true;
+  }
+
+  async findOne(email: string): Promise<CustomerEntity | undefined> {
+    return this.customerRepository.findOne({ where: { email } });
+  }
+
+  async validateCustomer(email: string): Promise<any> {
+    const customer = await this.findOne(email);
+    if (customer) {
+      const { ...result } = customer;
+      return result;
+    }
+    return null;
   }
 }

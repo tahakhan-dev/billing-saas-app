@@ -40,14 +40,20 @@ async function bootstrap() {
     app.enableShutdownHooks();
 
     const config = new DocumentBuilder()
+      .addBearerAuth({
+        type: 'http',
+        scheme: 'bearer',
+        in: 'header',
+      })
       .setTitle('SaaS Billing API')
       .setDescription('API for managing SaaS billing')
       .setVersion('1.0')
-      .addTag('billing')
+      .addTag('Billing')
+      .addBearerAuth()
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api', app, document);
+    SwaggerModule.setup('api_docs', app, document);
 
 
     await app.listen(APP_PORT, () => {

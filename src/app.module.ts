@@ -33,6 +33,7 @@ import { InvoiceModule } from './modules/invoice/invoice.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { PaymentModule } from './modules/payment/payment.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 
 @Module({
@@ -94,6 +95,7 @@ import { SubscriptionModule } from './modules/subscription/subscription.module';
     NotificationModule,
     SubscriptionModule,
     DatabaseModule.forRoot({ entities: entitiesList }),
+    AuthModule,
 
   ],
   controllers: [AppController],
