@@ -10,10 +10,11 @@ import { CustomerService } from '../customer/customer.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CustomerEntity } from '../customer/entities/customer.entity';
 import { SubscriptionPlanEntity } from '../subscription/entities/subscription-plan.entity';
+import { InvoiceEntity } from '../invoice/entities/invoice.entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([CustomerEntity, SubscriptionPlanEntity]),
+        TypeOrmModule.forFeature([CustomerEntity, SubscriptionPlanEntity,InvoiceEntity]),
         PassportModule.register({ defaultStrategy: 'jwt' }),  // Ensure PassportModule is configured
         JwtModule.register({
             secret: jwtConstants.secret,

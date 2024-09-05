@@ -34,11 +34,12 @@ import { NotificationModule } from './modules/notification/notification.module';
 import { PaymentModule } from './modules/payment/payment.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 
 @Module({
   imports: [
-
+    ScheduleModule.forRoot(),
     EnvConfigModule.forRoot(), // initializing config module for whole module,
     ClusterModule.forRootAsync({ // using this redis cluster module 
       imports: [CacheConfigModule],

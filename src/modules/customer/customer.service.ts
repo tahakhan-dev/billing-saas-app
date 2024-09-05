@@ -7,13 +7,16 @@ import { Repository } from 'typeorm';
 import { SubscriptionPlanEntity } from '../subscription/entities/subscription-plan.entity';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from 'src/common/constants';
+import { InvoiceEntity } from '../invoice/entities/invoice.entity';
 
 @Injectable()
 export class CustomerService {
   constructor(
     @InjectRepository(CustomerEntity) private readonly customerRepository: Repository<CustomerEntity>,
-    private jwtService: JwtService,  // Inject the JwtService
     @InjectRepository(SubscriptionPlanEntity) private readonly subscriptionPlanRepository: Repository<SubscriptionPlanEntity>,
+    @InjectRepository(InvoiceEntity) private readonly invoiceRepository: Repository<InvoiceEntity>,
+    private jwtService: JwtService,  // Inject the JwtService
+
 
   ) { }
 
@@ -112,16 +115,52 @@ export class CustomerService {
       if (!newPlan) {
         throw new NotFoundException(`Subscription Plan with ID ${updateCustomerDto.subscriptionPlanId} not found.`);
       }
-      customer.subscriptionPlan = newPlan; // Assign the new subscription plan
 
-      // Recalculate subscription end date based on the new plan
-      const endDate = new Date();
+      // Calculate days remaining in the current cycle
+      const today = new Date();
+      const daysRemaining = Math.ceil((customer.subscription_end_date.getTime() - today.getTime()) / (1000 * 3600 * 24));
+
+      // Calculate prorated amount for the current plan
+      const dailyRateOldPlan = customer.subscriptionPlan.price / customer.subscriptionPlan.duration;
+      const proratedAmountOldPlan = dailyRateOldPlan * daysRemaining;
+
+      // Create an invoice for the old plan prorated amount
+      const oldPlanInvoice = this.invoiceRepository.create({
+        customer: customer,
+        subscriptionPlan: customer.subscriptionPlan,
+        amount: proratedAmountOldPlan,
+        issueDate: new Date(),
+        dueDate: new Date(new Date().setDate(new Date().getDate() + 30)), // assuming 30-day payment terms
+        status: 'pending',
+      });
+      await this.invoiceRepository.save(oldPlanInvoice);
+
+      // Assign the new plan to the customer
+      customer.subscriptionPlan = newPlan;
+
+      // Calculate new subscription end date
+      const newEndDate = new Date();
       if (newPlan.billingCycle === 'days') {
-        endDate.setDate(endDate.getDate() + newPlan.duration);
+        newEndDate.setDate(newEndDate.getDate() + newPlan.duration);
       } else if (newPlan.billingCycle === 'months') {
-        endDate.setMonth(endDate.getMonth() + newPlan.duration);
+        newEndDate.setMonth(newEndDate.getMonth() + newPlan.duration);
       }
-      customer.subscription_end_date = endDate;
+      customer.subscription_end_date = newEndDate;
+
+      // Calculate the prorated amount for the new plan
+      const dailyRateNewPlan = newPlan.price / newPlan.duration;
+      const proratedAmountNewPlan = dailyRateNewPlan * (newPlan.duration - daysRemaining);
+
+      // Create an invoice for the new plan prorated amount
+      const newPlanInvoice = this.invoiceRepository.create({
+        customer: customer,
+        subscriptionPlan: newPlan,
+        amount: proratedAmountNewPlan,
+        issueDate: new Date(),
+        dueDate: new Date(new Date().setDate(new Date().getDate() + 30)), // assuming 30-day payment terms
+        status: 'pending',
+      });
+      await this.invoiceRepository.save(newPlanInvoice);
     }
 
     this.customerRepository.merge(customer, updateCustomerDto);

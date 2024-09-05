@@ -6,11 +6,12 @@ import { CustomerEntity } from './entities/customer.entity';
 import { SubscriptionPlanEntity } from '../subscription/entities/subscription-plan.entity';
 import { AuthModule } from '../auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
+import { InvoiceEntity } from '../invoice/entities/invoice.entity';
 
 @Module({
   imports: [
     AuthModule,
-    TypeOrmModule.forFeature([CustomerEntity,SubscriptionPlanEntity])
+    TypeOrmModule.forFeature([CustomerEntity, SubscriptionPlanEntity, InvoiceEntity])
   ],
   controllers: [CustomerController],
   providers: [JwtService,
