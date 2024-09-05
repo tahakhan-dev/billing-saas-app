@@ -1,9 +1,7 @@
-// src/modules/subscription/dto/update-subscription-plan.dto.ts
-
+import { IsOptional, IsInt, IsString, MaxLength, IsEnum, IsNumber } from 'class-validator';
 import { PartialType, ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsDecimal, IsInt, IsString, MaxLength, IsEnum, IsNumber } from 'class-validator';
-import { CreateSubscriptionPlanDto } from './create-subscription.dto';
 import { SubscriptionPlanStatus } from 'src/common/enums/generic.enum';
+import { CreateSubscriptionPlanDto } from './create-subscription.dto';
 
 export class UpdateSubscriptionPlanDto extends PartialType(CreateSubscriptionPlanDto) {
     @ApiPropertyOptional({ description: 'Name of the subscription plan', example: 'Premium Plan' })

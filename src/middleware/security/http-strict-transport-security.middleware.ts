@@ -1,14 +1,9 @@
-import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
-// import { KafkaService } from 'src/modules/kafka/kafka.service';
-// import { KAFKA_CONSTANT } from 'src/helpers/constants';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Response } from 'express';
 import helmet from 'helmet';
 
 @Injectable()
 export class HttpStrictTransportSecurityMiddleware implements NestMiddleware {
-  constructor(
-    // @Inject(KafkaService) private readonly kafkaService: KafkaService,
-  ) { }
   use(req: any, res: Response, next: () => void) {
     try {
       // Define HSTS options
@@ -23,7 +18,6 @@ export class HttpStrictTransportSecurityMiddleware implements NestMiddleware {
         next();
       });
     } catch (error) {
-      // this.kafkaService.send(KAFKA_CONSTANT.KAFKA_TOPIC, { HttpStrictTransportSecurityMiddleware: error }, { fileName: Buffer.from(__filename), className: Buffer.from('HttpStrictTransportSecurityMiddleware'), methodName: Buffer.from('HttpStrictTransportSecurityMiddleware') }).then().catch((error) => console.error('Failed to send message:', error));
       console.error(error, "HttpStrictTransportSecurityMiddleware Error");
     }
   }

@@ -1,5 +1,3 @@
-// src/modules/customer/dto/update-customer.dto.ts
-
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateCustomerDto } from './create-customer.dto';
 import { IsOptional, IsDateString, IsNumber } from 'class-validator';

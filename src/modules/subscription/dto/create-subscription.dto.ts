@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsDecimal, IsEnum, IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
+import { IsEnum, IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
 import { SubscriptionPlanStatus } from "src/common/enums/generic.enum";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateSubscriptionPlanDto {
     @ApiProperty({ example: 'Basic Plan', description: 'Name of the subscription plan' })

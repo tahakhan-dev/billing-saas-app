@@ -1,14 +1,9 @@
-import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
-// import { KafkaService } from 'src/modules/kafka/kafka.service';
-// import { KAFKA_CONSTANT } from 'src/helpers/constants';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Response } from 'express';
 import helmet from 'helmet';
 
 @Injectable()
 export class ContentSecurityPolicyMiddleware implements NestMiddleware {
-    constructor(
-        // @Inject(KafkaService) private readonly kafkaService: KafkaService,
-    ) { }
     use(req: any, res: Response, next: () => void) {
         try {
             // Define the desired CSP policies here
@@ -27,7 +22,6 @@ export class ContentSecurityPolicyMiddleware implements NestMiddleware {
                 next();
             });
         } catch (error) {
-            // this.kafkaService.send(KAFKA_CONSTANT.KAFKA_TOPIC, { ContentSecurityPolicyMiddleware: error }, { fileName: Buffer.from(__filename), className: Buffer.from('ContentSecurityPolicyMiddleware'), methodName: Buffer.from('ContentSecurityPolicyMiddleware') }).then().catch((error) => console.error('Failed to send message:', error));
             console.error(error, 'ContentSecurityPolicyMiddleware Error');
         }
     }

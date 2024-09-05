@@ -1,8 +1,6 @@
-// src/modules/payment/dto/create-payment.dto.ts
-
 import { IsNotEmpty, IsNumber, IsDate, IsEnum } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 import { PaymentStatus } from 'src/common/enums/generic.enum';
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
 export class CreatePaymentDto {

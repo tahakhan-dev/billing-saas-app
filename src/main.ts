@@ -1,3 +1,4 @@
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { SYSTEM_CONSTANT } from './common/constants';
 import { NestFactory } from '@nestjs/core';
@@ -5,7 +6,6 @@ import { AppModule } from './app.module';
 import * as cors from 'cors';
 import helmet from 'helmet';
 import 'dotenv/config';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 const cluster = require("cluster")
 

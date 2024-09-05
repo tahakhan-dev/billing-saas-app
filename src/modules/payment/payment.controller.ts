@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put } from '@nestjs/common';
-import { PaymentService } from './payment.service';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PaymentEntity } from './entities/payment.entity';
+import { PaymentService } from './payment.service';
 
 @ApiTags('Payments')
 @Controller('payment')
@@ -11,6 +11,7 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) { }
 
   @Post()
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Record a new payment' })
   @ApiResponse({ status: 201, description: 'Payment recorded successfully.' })
@@ -19,6 +20,7 @@ export class PaymentController {
   }
 
   @Patch('/:id/fail')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Handle a failed payment and retry' })
   @ApiResponse({ status: 200, description: 'Payment retried and handled successfully.' })
@@ -29,6 +31,7 @@ export class PaymentController {
 
 
   @Get()
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'List all payments' })
   @ApiResponse({ status: 200, description: 'Returned all payments successfully', type: [PaymentEntity] })
@@ -37,6 +40,7 @@ export class PaymentController {
   }
 
   @Get('/:id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Retrieve a specific payment by ID' })
   @ApiResponse({ status: 200, description: 'Payment retrieved successfully', type: PaymentEntity })
@@ -51,6 +55,7 @@ export class PaymentController {
   }
 
   @Put('/:id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update payment details' })
   @ApiResponse({ status: 200, description: 'Payment updated successfully.' })
@@ -66,6 +71,7 @@ export class PaymentController {
   }
 
   @Delete('/:id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a payment' })
   @ApiResponse({ status: 204, description: 'Payment deleted successfully' })

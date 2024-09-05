@@ -1,16 +1,16 @@
 // src/auth/auth.module.ts
 
-import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { SubscriptionPlanEntity } from '../subscription/entities/subscription-plan.entity';
+import { CustomerEntity } from '../customer/entities/customer.entity';
+import { InvoiceEntity } from '../invoice/entities/invoice.entity';
+import { CustomerService } from '../customer/customer.service';
 import { PassportModule } from '@nestjs/passport';
 import { jwtConstants } from 'src/common/constants';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
-import { CustomerService } from '../customer/customer.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { CustomerEntity } from '../customer/entities/customer.entity';
-import { SubscriptionPlanEntity } from '../subscription/entities/subscription-plan.entity';
-import { InvoiceEntity } from '../invoice/entities/invoice.entity';
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
     imports: [

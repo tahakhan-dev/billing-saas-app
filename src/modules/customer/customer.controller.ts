@@ -30,8 +30,8 @@ export class CustomerController {
     };
   }
 
-  @ApiBearerAuth()
   @Put('/:id/assign-subscription/:subscriptionPlanId')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Assign a subscription plan to a customer' })
   @ApiResponse({ status: 200, description: 'Subscription plan assigned successfully' })
@@ -56,8 +56,8 @@ export class CustomerController {
   }
 
 
-  @ApiBearerAuth()
   @Get('/:id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Retrieve a specific customer by ID' })
   @ApiResponse({ status: 200, description: 'Customer retrieved successfully', type: CustomerEntity })
@@ -74,8 +74,8 @@ export class CustomerController {
   }
 
 
-  @ApiBearerAuth()
   @Put('/:id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update customer information' })
   @ApiResponse({ status: 200, description: 'Customer updated successfully' })
@@ -90,8 +90,8 @@ export class CustomerController {
   }
 
 
-  @ApiBearerAuth()
   @Delete('/:id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a customer' })
   @ApiResponse({ status: 204, description: 'Customer deleted successfully' })

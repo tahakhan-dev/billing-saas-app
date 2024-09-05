@@ -1,5 +1,3 @@
-// src/modules/customer/dto/create-customer.dto.ts
-
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
 

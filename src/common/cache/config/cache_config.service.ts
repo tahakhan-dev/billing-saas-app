@@ -1,6 +1,6 @@
-import { SYSTEM_CONSTANT } from 'src/common/constants';
 import { DEFAULT__CACHE_CONFIG, NodeRole } from './cache_config.default';
 import { ConfigData, ConfigCacheData } from './cache_config.interface';
+import { SYSTEM_CONSTANT } from 'src/common/constants';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

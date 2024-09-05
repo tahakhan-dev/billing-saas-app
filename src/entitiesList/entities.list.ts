@@ -1,7 +1,7 @@
+import { SubscriptionPlanEntity } from "src/modules/subscription/entities/subscription-plan.entity";
 import { CustomerEntity } from "src/modules/customer/entities/customer.entity";
 import { InvoiceEntity } from "src/modules/invoice/entities/invoice.entity";
 import { PaymentEntity } from "src/modules/payment/entities/payment.entity";
-import { SubscriptionPlanEntity } from "src/modules/subscription/entities/subscription-plan.entity";
 
 
 // database entities

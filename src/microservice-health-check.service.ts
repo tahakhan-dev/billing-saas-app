@@ -1,8 +1,8 @@
 import { HealthIndicator, HealthIndicatorResult, HealthCheckError } from '@nestjs/terminus';
+import { IHealthCheck } from './common/interface/health-check.interface';
 import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import 'dotenv/config';
-import { IHealthCheck } from './common/interface/health-check.interface';
 
 @Injectable()
 export class MicroServiceHealthCheckService extends HealthIndicator {

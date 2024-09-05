@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus
 import { InvoiceService } from './invoice.service';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { InvoiceEntity } from './entities/invoice.entity';
 
 @ApiTags('Invoices')
@@ -12,6 +12,7 @@ export class InvoiceController {
 
 
   @Post()
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new invoice' })
   @ApiResponse({ status: 201, description: 'Invoice created successfully.' })
@@ -20,6 +21,7 @@ export class InvoiceController {
   }
 
   @Get()
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'List all invoices' })
   @ApiResponse({ status: 200, description: 'Returned all invoices successfully', type: [InvoiceEntity] })
@@ -28,6 +30,7 @@ export class InvoiceController {
   }
 
   @Get('/:id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Retrieve a specific invoice by ID' })
   @ApiResponse({ status: 200, description: 'Invoice retrieved successfully', type: InvoiceEntity })
@@ -44,6 +47,7 @@ export class InvoiceController {
   }
 
   @Put('/:id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update invoice details' })
   @ApiResponse({ status: 200, description: 'Invoice updated successfully.' })
@@ -59,6 +63,7 @@ export class InvoiceController {
   }
 
   @Delete('/:id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete an invoice' })
   @ApiResponse({ status: 204, description: 'Invoice deleted successfully' })

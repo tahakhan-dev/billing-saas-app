@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
-import { EmailService } from '../email/email.service';
-import { InvoiceCreatedEvent } from 'src/email/events/invoice-created.event';
 import { PaymentSuccessfulEvent } from 'src/email/events/payment-successful.event';
+import { InvoiceCreatedEvent } from 'src/email/events/invoice-created.event';
 import { PaymentFailedEvent } from 'src/email/events/payment-failed.event';
+import { EmailService } from '../email/email.service';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class NotificationService {
