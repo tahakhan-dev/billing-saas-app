@@ -10,7 +10,7 @@ export const getStatusCode = <T>(exception: T): number => {  // This function ta
             ? exception?.getStatus()
             : HttpStatus.INTERNAL_SERVER_ERROR;
     } catch (error) {
-        console.error(error, '==================getStatusCode=====================')
+        console.error(error)
     }
 };
 
@@ -25,7 +25,7 @@ export const getErrorMessage = <T>(exception: T): string => { // This function a
         }
         return null;
     } catch (error) {
-        console.error(error, '==================getErrorMessage=====================');
+        console.error(error);
     }
 };
 

@@ -74,7 +74,7 @@ async function bootstrap() {
     });
 
   } catch (error) {
-    console.error(error, '================== Bootstrap Function ===============');
+    console.error(error);
   }
 }
 // creating cluster for this appliation 

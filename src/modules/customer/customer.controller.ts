@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put, UseGuards } from '@nestjs/common';
-import { CustomerService } from './customer.service';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CustomerEntity } from './entities/customer.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.gaurd';
+import { CustomerService } from './customer.service';
 
 @ApiTags('Customers')
 @Controller('customer')
@@ -65,8 +65,6 @@ export class CustomerController {
   @ApiParam({ name: 'id', type: String, description: 'Customer ID' })
   async getCustomerById(@Param('id') id: number): Promise<CustomerEntity> {
     const customer = await this.customerService.findById(id);
-    console.log(customer, '====customer======');
-
     if (!customer) {
       throw new NotFoundException(`Customer with ID ${id} not found.`);
     }

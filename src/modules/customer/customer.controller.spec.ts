@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { CustomerController } from './customer.controller';
-import { CustomerService } from './customer.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.gaurd';
-import { JwtService } from '@nestjs/jwt';
 import { CreateCustomerDto } from './dto/create-customer.dto';
+import { CustomerController } from './customer.controller';
+import { JwtAuthGuard } from '../auth/jwt-auth.gaurd';
+import { Test, TestingModule } from '@nestjs/testing';
+import { CustomerService } from './customer.service';
+import { JwtService } from '@nestjs/jwt';
 
 describe('CustomerController', () => {
   let controller: CustomerController;

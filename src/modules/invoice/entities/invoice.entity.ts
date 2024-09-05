@@ -1,7 +1,7 @@
-import { CustomerEntity } from 'src/modules/customer/entities/customer.entity';
-import { PaymentEntity } from 'src/modules/payment/entities/payment.entity';
 import { SubscriptionPlanEntity } from 'src/modules/subscription/entities/subscription-plan.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { CustomerEntity } from 'src/modules/customer/entities/customer.entity';
+import { PaymentEntity } from 'src/modules/payment/entities/payment.entity';
 
 @Entity({ name: 'invoice' })
 export class InvoiceEntity {

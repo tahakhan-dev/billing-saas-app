@@ -12,40 +12,60 @@ export class SubscriptionService {
   ) { }
 
   async create(createSubscriptionPlanDto: CreateSubscriptionPlanDto): Promise<SubscriptionPlanEntity> {
-    const { name } = createSubscriptionPlanDto;
-    const existingPlan = await this.subscriptionPlanRepository.findOne({ where: { name } });
-    if (existingPlan) {
-      throw new ConflictException(`A subscription plan with the name '${name}' already exists.`);
-    }
+    try {
+      const { name } = createSubscriptionPlanDto;
+      const existingPlan = await this.subscriptionPlanRepository.findOne({ where: { name } });
+      if (existingPlan) {
+        throw new ConflictException(`A subscription plan with the name '${name}' already exists.`);
+      }
 
-    const newPlan = this.subscriptionPlanRepository.create(createSubscriptionPlanDto);
-    return this.subscriptionPlanRepository.save(newPlan);
+      const newPlan = this.subscriptionPlanRepository.create(createSubscriptionPlanDto);
+      return this.subscriptionPlanRepository.save(newPlan);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
 
   async findAll(): Promise<SubscriptionPlanEntity[]> {
-    return this.subscriptionPlanRepository.find();
+    try {
+      return this.subscriptionPlanRepository.find();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async findById(id: number): Promise<SubscriptionPlanEntity | undefined> {
-    return this.subscriptionPlanRepository.findOne({ where: { id } });
+    try {
+      return this.subscriptionPlanRepository.findOne({ where: { id } });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async update(id: number, updateSubscriptionPlanDto: UpdateSubscriptionPlanDto): Promise<SubscriptionPlanEntity | null> {
-    const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id } });
-    if (!subscriptionPlan) {
-      return null;
+    try {
+      const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id } });
+      if (!subscriptionPlan) {
+        return null;
+      }
+      this.subscriptionPlanRepository.merge(subscriptionPlan, updateSubscriptionPlanDto);
+      return this.subscriptionPlanRepository.save(subscriptionPlan);
+    } catch (error) {
+      console.error(error);
     }
-    this.subscriptionPlanRepository.merge(subscriptionPlan, updateSubscriptionPlanDto);
-    return this.subscriptionPlanRepository.save(subscriptionPlan);
   }
 
   async delete(id: number): Promise<boolean> {
-    const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id } });
-    if (!subscriptionPlan) {
-      return false;
+    try {
+      const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id } });
+      if (!subscriptionPlan) {
+        return false;
+      }
+      await this.subscriptionPlanRepository.remove(subscriptionPlan);
+      return true;
+    } catch (error) {
+      console.error(error);
     }
-    await this.subscriptionPlanRepository.remove(subscriptionPlan);
-    return true;
   }
 }

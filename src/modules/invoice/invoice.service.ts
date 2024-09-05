@@ -24,115 +24,137 @@ export class InvoiceService {
 
 
   async create(createInvoiceDto: CreateInvoiceDto): Promise<InvoiceEntity> {
-    const { subscriptionPlanId, customerId, ...invoiceDetails } = createInvoiceDto;
 
-    // Check if customer with the same email already exists
-    const existingCustomer = await this.customerRepository.findOne({ where: { id: customerId } });
-    if (!existingCustomer) {
-      throw new NotFoundException(`This Customer Does not Exists.`);
+    try {
+      const { subscriptionPlanId, customerId, ...invoiceDetails } = createInvoiceDto;
+
+      // Check if customer with the same email already exists
+      const existingCustomer = await this.customerRepository.findOne({ where: { id: customerId } });
+      if (!existingCustomer) {
+        throw new NotFoundException(`This Customer Does not Exists.`);
+      }
+
+      // Find the subscription plan
+      const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id: subscriptionPlanId } });
+      if (!subscriptionPlan) {
+        throw new NotFoundException(`Subscription Plan with ID ${subscriptionPlanId} not found`);
+      }
+
+      // Create the customer with the  resolved invoice 
+
+      const newInvoice = this.invoiceRepository.create({
+        ...invoiceDetails,
+        customer: existingCustomer,
+        subscriptionPlan: subscriptionPlan
+      });
+
+      const savedInvoice = await this.invoiceRepository.save(newInvoice);
+
+      // Send email notification
+      // Emit an event for the new invoice
+      this.eventEmitter.emit(
+        'invoice.created',
+        new InvoiceCreatedEvent(existingCustomer.email, savedInvoice.id, savedInvoice.amount),
+      );
+
+      return savedInvoice;
+    } catch (error) {
+      console.error(error);
     }
-
-    // Find the subscription plan
-    const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id: subscriptionPlanId } });
-    if (!subscriptionPlan) {
-      throw new NotFoundException(`Subscription Plan with ID ${subscriptionPlanId} not found`);
-    }
-
-    // Create the customer with the  resolved invoice 
-
-    const newInvoice = this.invoiceRepository.create({
-      ...invoiceDetails,
-      customer: existingCustomer,
-      subscriptionPlan: subscriptionPlan
-    });
-
-    const savedInvoice = await this.invoiceRepository.save(newInvoice);
-
-    // Send email notification
-    // Emit an event for the new invoice
-    this.eventEmitter.emit(
-      'invoice.created',
-      new InvoiceCreatedEvent(existingCustomer.email, savedInvoice.id, savedInvoice.amount),
-    );
-
-    return savedInvoice;
-
   }
 
   async findAll(): Promise<InvoiceEntity[]> {
-    return await this.invoiceRepository.find({
-      relations: ['customer', 'subscriptionPlan'] // Assuming relations if needed
-    });
+    try {
+      return await this.invoiceRepository.find({
+        relations: ['customer', 'subscriptionPlan'] // Assuming relations if needed
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} invoice`;
-  }
 
   async findById(id: number): Promise<InvoiceEntity | undefined> {
-    return await this.invoiceRepository.findOne({
-      where: { id },
-      relations: ['customer', 'subscriptionPlan']  // Assuming relations are needed
-    });
+    try {
+      return await this.invoiceRepository.findOne({
+        where: { id },
+        relations: ['customer', 'subscriptionPlan']  // Assuming relations are needed
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async update(id: number, updateInvoiceDto: UpdateInvoiceDto): Promise<InvoiceEntity | null> {
-    const invoice = await this.invoiceRepository.findOne({ where: { id } });
-    if (!invoice) {
-      return null;
+    try {
+      const invoice = await this.invoiceRepository.findOne({ where: { id } });
+      if (!invoice) {
+        return null;
+      }
+      this.invoiceRepository.merge(invoice, updateInvoiceDto);
+      await this.invoiceRepository.save(invoice);
+      return invoice;
+    } catch (error) {
+      console.error(error);
     }
-    this.invoiceRepository.merge(invoice, updateInvoiceDto);
-    await this.invoiceRepository.save(invoice);
-    return invoice;
   }
 
 
   async delete(id: number): Promise<boolean> {
-    const invoice = await this.invoiceRepository.findOne({ where: { id } });
-    if (!invoice) {
-      return false;
+    try {
+      const invoice = await this.invoiceRepository.findOne({ where: { id } });
+      if (!invoice) {
+        return false;
+      }
+      await this.invoiceRepository.remove(invoice);
+      return true;
+    } catch (error) {
+      console.error(error);
     }
-    await this.invoiceRepository.remove(invoice);
-    return true;
   }
 
   // Cron job to automatically generate invoices
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async generateInvoicesForDueCustomers() {
-    const customers = await this.customerRepository.find({
-      where: {
-        subscription_end_date: new Date(), // Find customers whose subscription ends today
-      },
-      relations: ['subscriptionPlan'],
-    });
-
-    for (const customer of customers) {
-      const newInvoice = this.invoiceRepository.create({
-        customer: customer,
-        subscriptionPlan: customer.subscriptionPlan,
-        amount: customer.subscriptionPlan.price,
-        issueDate: new Date(),
-        dueDate: new Date(new Date().setDate(new Date().getDate() + 30)), // assuming 30-day payment terms
-        status: 'pending',
+    try {
+      const customers = await this.customerRepository.find({
+        where: {
+          subscription_end_date: new Date(), // Find customers whose subscription ends today
+        },
+        relations: ['subscriptionPlan'],
       });
 
-      const savedInvoice = await this.invoiceRepository.save(newInvoice);
+      for (const customer of customers) {
+        const newInvoice = this.invoiceRepository.create({
+          customer: customer,
+          subscriptionPlan: customer.subscriptionPlan,
+          amount: customer.subscriptionPlan.price,
+          issueDate: new Date(),
+          dueDate: new Date(new Date().setDate(new Date().getDate() + 30)), // assuming 30-day payment terms
+          status: 'pending',
+        });
 
-      // Emit an event for the new invoice
-      this.eventEmitter.emit(
-        'invoice.created',
-        new InvoiceCreatedEvent(customer.email, savedInvoice.id, savedInvoice.amount),
-      );
+        const savedInvoice = await this.invoiceRepository.save(newInvoice);
 
-      // Update customer's subscription end date for the next billing cycle
-      const endDate = new Date();
-      if (customer.subscriptionPlan.billingCycle === 'days') {
-        endDate.setDate(endDate.getDate() + customer.subscriptionPlan.duration);
-      } else if (customer.subscriptionPlan.billingCycle === 'months') {
-        endDate.setMonth(endDate.getMonth() + customer.subscriptionPlan.duration);
+        // Emit an event for the new invoice
+        this.eventEmitter.emit(
+          'invoice.created',
+          new InvoiceCreatedEvent(customer.email, savedInvoice.id, savedInvoice.amount),
+        );
+
+        // Update customer's subscription end date for the next billing cycle
+        const endDate = new Date();
+        if (customer.subscriptionPlan.billingCycle === 'days') {
+          endDate.setDate(endDate.getDate() + customer.subscriptionPlan.duration);
+        } else if (customer.subscriptionPlan.billingCycle === 'months') {
+          endDate.setMonth(endDate.getMonth() + customer.subscriptionPlan.duration);
+        }
+        customer.subscription_end_date = endDate;
+        await this.customerRepository.save(customer);
       }
-      customer.subscription_end_date = endDate;
-      await this.customerRepository.save(customer);
+    } catch (error) {
+      console.error(error);
     }
   }
 

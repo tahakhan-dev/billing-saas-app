@@ -1,7 +1,7 @@
+import { CustomerService } from '../customer/customer.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { CustomerService } from '../customer/customer.service';
 
 describe('AuthService', () => {
     let service: AuthService;

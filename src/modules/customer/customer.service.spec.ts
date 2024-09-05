@@ -1,8 +1,8 @@
+import { CreateCustomerDto } from './dto/create-customer.dto';
+import { CustomerEntity } from './entities/customer.entity';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CustomerService } from './customer.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { CustomerEntity } from './entities/customer.entity';
-import { CreateCustomerDto } from './dto/create-customer.dto';
 
 describe('CustomerService', () => {
   let service: CustomerService;
