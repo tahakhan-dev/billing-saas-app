@@ -30,6 +30,21 @@ export class CustomerController {
     };
   }
 
+  @ApiBearerAuth()
+  @Put('/:id/assign-subscription/:subscriptionPlanId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Assign a subscription plan to a customer' })
+  @ApiResponse({ status: 200, description: 'Subscription plan assigned successfully' })
+  @ApiResponse({ status: 404, description: 'Customer or subscription plan not found' })
+  @ApiParam({ name: 'id', type: String, description: 'Customer ID' })
+  async assignSubscription(
+    @Param('id') id: number,
+    @Param('subscriptionPlanId') subscriptionPlanId: number,
+  ) {
+    const updatedCustomer = await this.customerService.assignSubscriptionPlan(id, subscriptionPlanId);
+    return updatedCustomer;
+  }
+
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get()

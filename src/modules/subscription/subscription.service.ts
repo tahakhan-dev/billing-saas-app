@@ -11,6 +11,7 @@ export class SubscriptionService {
   constructor(
     @InjectRepository(SubscriptionPlanEntity) private readonly subscriptionPlanRepository: Repository<SubscriptionPlanEntity>,
   ) { }
+
   async create(createSubscriptionPlanDto: CreateSubscriptionPlanDto): Promise<SubscriptionPlanEntity> {
     const { name } = createSubscriptionPlanDto;
     const existingPlan = await this.subscriptionPlanRepository.findOne({ where: { name } });
@@ -19,20 +20,16 @@ export class SubscriptionService {
     }
 
     const newPlan = this.subscriptionPlanRepository.create(createSubscriptionPlanDto);
-    await this.subscriptionPlanRepository.save(newPlan);
-    return newPlan;
+    return this.subscriptionPlanRepository.save(newPlan);
   }
 
 
   async findAll(): Promise<SubscriptionPlanEntity[]> {
-    return await this.subscriptionPlanRepository.find();
+    return this.subscriptionPlanRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} subscription`;
-  }
   async findById(id: number): Promise<SubscriptionPlanEntity | undefined> {
-    return await this.subscriptionPlanRepository.findOne({ where: { id } });
+    return this.subscriptionPlanRepository.findOne({ where: { id } });
   }
 
   async update(id: number, updateSubscriptionPlanDto: UpdateSubscriptionPlanDto): Promise<SubscriptionPlanEntity | null> {
@@ -41,8 +38,7 @@ export class SubscriptionService {
       return null;
     }
     this.subscriptionPlanRepository.merge(subscriptionPlan, updateSubscriptionPlanDto);
-    await this.subscriptionPlanRepository.save(subscriptionPlan);
-    return subscriptionPlan;
+    return this.subscriptionPlanRepository.save(subscriptionPlan);
   }
 
   async delete(id: number): Promise<boolean> {

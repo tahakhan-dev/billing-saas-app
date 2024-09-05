@@ -16,6 +16,34 @@ export class CustomerService {
     @InjectRepository(SubscriptionPlanEntity) private readonly subscriptionPlanRepository: Repository<SubscriptionPlanEntity>,
 
   ) { }
+
+  async assignSubscriptionPlan(customerId: number, subscriptionPlanId: number): Promise<CustomerEntity> {
+    const customer = await this.customerRepository.findOne({ where: { id: customerId }, relations: ['subscriptionPlan'] });
+    if (!customer) {
+      throw new NotFoundException(`Customer with ID ${customerId} not found.`);
+    }
+
+    const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id: subscriptionPlanId } });
+    if (!subscriptionPlan) {
+      throw new NotFoundException(`Subscription plan with ID ${subscriptionPlanId} not found.`);
+    }
+
+    customer.subscriptionPlan = subscriptionPlan;
+    customer.subscription_status = 'active';
+    customer.subscription_start_date = new Date();
+
+    // Calculate subscription end date based on the plan's duration and billing cycle
+    const endDate = new Date();
+    if (subscriptionPlan.billingCycle === 'days') {
+      endDate.setDate(endDate.getDate() + subscriptionPlan.duration);
+    } else if (subscriptionPlan.billingCycle === 'months') {
+      endDate.setMonth(endDate.getMonth() + subscriptionPlan.duration);
+    }
+
+    customer.subscription_end_date = endDate;
+    return this.customerRepository.save(customer);
+  }
+
   async create(createCustomerDto: CreateCustomerDto): Promise<{ customer: CustomerEntity, accessToken: string }> {
     const { subscriptionPlanId, email, ...customerDetails } = createCustomerDto;
 
@@ -24,7 +52,6 @@ export class CustomerService {
 
     if (existingCustomer) {
       const payload = { email: existingCustomer.email, sub: existingCustomer.id };
-
       const accessToken = await this.jwtService.signAsync({ ...payload }, { secret: jwtConstants.secret });
       return { customer: existingCustomer, accessToken };
     }
@@ -35,15 +62,23 @@ export class CustomerService {
       throw new NotFoundException(`Subscription Plan with ID ${subscriptionPlanId} not found`);
     }
 
-    console.log(subscriptionPlan, '=====subscriptionPlan========');
-
-
     // Create the customer with the resolved subscription plan
     const customer = this.customerRepository.create({
       ...customerDetails,
       email, // Ensure email is included in the spread operation
-      subscriptionPlan: subscriptionPlan  // Assigning the entity, not the ID
+      subscriptionPlan: subscriptionPlan,
+      subscription_status: 'active',
+      subscription_start_date: new Date(),
     });
+
+    // Calculate subscription end date based on the plan's duration and billing cycle
+    const endDate = new Date();
+    if (subscriptionPlan.billingCycle === 'days') {
+      endDate.setDate(endDate.getDate() + subscriptionPlan.duration);
+    } else if (subscriptionPlan.billingCycle === 'months') {
+      endDate.setMonth(endDate.getMonth() + subscriptionPlan.duration);
+    }
+    customer.subscription_end_date = endDate;
 
     const savedCustomer = await this.customerRepository.save(customer);
     // Generate JWT token for the newly created customer
@@ -52,8 +87,7 @@ export class CustomerService {
     const accessToken = await this.jwtService.signAsync({ ...payload }, { secret: jwtConstants.secret });
 
     // Return both the customer details and the JWT token
-    return { customer: customer, accessToken };
-
+    return { customer: savedCustomer, accessToken };
   }
 
   async findAll(): Promise<CustomerEntity[]> {
@@ -68,7 +102,7 @@ export class CustomerService {
   }
 
   async update(id: number, updateCustomerDto: UpdateCustomerDto): Promise<CustomerEntity> {
-    const customer = await this.customerRepository.findOne({ where: { id } });
+    const customer = await this.customerRepository.findOne({ where: { id }, relations: ['subscriptionPlan'] });
     if (!customer) {
       throw new NotFoundException(`Customer with ID ${id} not found.`);
     }
@@ -79,6 +113,15 @@ export class CustomerService {
         throw new NotFoundException(`Subscription Plan with ID ${updateCustomerDto.subscriptionPlanId} not found.`);
       }
       customer.subscriptionPlan = newPlan; // Assign the new subscription plan
+
+      // Recalculate subscription end date based on the new plan
+      const endDate = new Date();
+      if (newPlan.billingCycle === 'days') {
+        endDate.setDate(endDate.getDate() + newPlan.duration);
+      } else if (newPlan.billingCycle === 'months') {
+        endDate.setMonth(endDate.getMonth() + newPlan.duration);
+      }
+      customer.subscription_end_date = endDate;
     }
 
     this.customerRepository.merge(customer, updateCustomerDto);

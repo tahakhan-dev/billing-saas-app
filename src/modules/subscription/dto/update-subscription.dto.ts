@@ -22,6 +22,11 @@ export class UpdateSubscriptionPlanDto extends PartialType(CreateSubscriptionPla
     @IsInt()
     duration?: number;
 
+    @ApiPropertyOptional({ description: 'Billing cycle unit (e.g., days, months)', example: 'months' })
+    @IsOptional()
+    @IsString()
+    billingCycle?: string;
+
     @ApiPropertyOptional({ description: 'Features included in the plan', example: 'Access to premium features' })
     @IsOptional()
     @IsString()
