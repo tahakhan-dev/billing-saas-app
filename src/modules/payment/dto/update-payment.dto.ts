@@ -1,9 +1,7 @@
-// src/modules/payment/dto/update-payment.dto.ts
-
+import { IsOptional, IsNumber, IsEnum, IsDate } from 'class-validator';
 import { PartialType, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsNumber, IsDateString, IsEnum, IsDate } from 'class-validator';
-import { CreatePaymentDto } from './create-payment.dto';
 import { PaymentStatus } from 'src/common/enums/generic.enum';
+import { CreatePaymentDto } from './create-payment.dto';
 import { Type } from 'class-transformer';
 
 export class UpdatePaymentDto extends PartialType(CreatePaymentDto) {

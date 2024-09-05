@@ -1,8 +1,6 @@
-// src/auth/auth.service.ts
-
+import { CustomerService } from '../customer/customer.service';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { CustomerService } from '../customer/customer.service';
 
 @Injectable()
 export class AuthService {
@@ -12,17 +10,25 @@ export class AuthService {
     ) { }
 
     async validateUser(email: string): Promise<any> {
-        return this.customerService.validateCustomer(email);
+        try {
+            return this.customerService.validateCustomer(email);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     async login(email: string) {
-        const customer = await this.validateUser(email);
-        if (!customer) {
-            return null;
+        try {
+            const customer = await this.validateUser(email);
+            if (!customer) {
+                return null;
+            }
+            const payload = { email: customer?.email, sub: customer?.id };
+            return {
+                access_token: this.jwtService?.sign(payload),
+            };
+        } catch (error) {
+            console.error(error);
         }
-        const payload = { email: customer.email, sub: customer.id };
-        return {
-            access_token: this.jwtService.sign(payload),
-        };
     }
 }

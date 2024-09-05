@@ -35,7 +35,7 @@ export class LoggingInterceptor implements NestInterceptor {
         this.loggingFunctions.activityLogHandler(request, body, response, invokationRestMethod, invokationApiUrl, invokationIp, invokationUserAgent, invokationController, invokationMethod, `After... ${Date.now() - now}ms`, statusCode);
       }),
       catchError((err) => {
-        console.error(err, '==================Logging Interceptor catchError=====================');
+        console.error(err);
         const { statusCode } = response
         this.loggingFunctions.activityLogHandler(request, body, response, invokationRestMethod, invokationApiUrl, invokationIp, invokationUserAgent, invokationController, invokationMethod, `After... ${Date.now() - now}ms -${err}`, statusCode);
         this.logger.error(err);

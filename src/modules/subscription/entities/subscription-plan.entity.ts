@@ -17,6 +17,9 @@ export class SubscriptionPlanEntity {
   @Column({ name: 'duration', nullable: false })
   duration: number;
 
+  @Column({ name: 'billing_cycle', nullable: false })
+  billingCycle: string; // E.g., 'days', 'months'
+
   @Column({ name: 'status', nullable: false })
   status: string;
 

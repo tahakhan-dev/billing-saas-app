@@ -1,56 +1,71 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-// import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { SubscriptionPlanEntity } from './entities/subscription-plan.entity';
-import { Repository } from 'typeorm';
 import { CreateSubscriptionPlanDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionPlanDto } from './dto/update-subscription.dto';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class SubscriptionService {
   constructor(
     @InjectRepository(SubscriptionPlanEntity) private readonly subscriptionPlanRepository: Repository<SubscriptionPlanEntity>,
   ) { }
-  async create(createSubscriptionPlanDto: CreateSubscriptionPlanDto): Promise<SubscriptionPlanEntity> {
-    const { name } = createSubscriptionPlanDto;
-    const existingPlan = await this.subscriptionPlanRepository.findOne({ where: { name } });
-    if (existingPlan) {
-      throw new ConflictException(`A subscription plan with the name '${name}' already exists.`);
-    }
 
-    const newPlan = this.subscriptionPlanRepository.create(createSubscriptionPlanDto);
-    await this.subscriptionPlanRepository.save(newPlan);
-    return newPlan;
+  async create(createSubscriptionPlanDto: CreateSubscriptionPlanDto): Promise<SubscriptionPlanEntity> {
+    try {
+      const { name } = createSubscriptionPlanDto;
+      const existingPlan = await this.subscriptionPlanRepository.findOne({ where: { name } });
+      if (existingPlan) {
+        throw new ConflictException(`A subscription plan with the name '${name}' already exists.`);
+      }
+
+      const newPlan = this.subscriptionPlanRepository.create(createSubscriptionPlanDto);
+      return this.subscriptionPlanRepository.save(newPlan);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
 
   async findAll(): Promise<SubscriptionPlanEntity[]> {
-    return await this.subscriptionPlanRepository.find();
+    try {
+      return this.subscriptionPlanRepository.find();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} subscription`;
-  }
   async findById(id: number): Promise<SubscriptionPlanEntity | undefined> {
-    return await this.subscriptionPlanRepository.findOne({ where: { id } });
+    try {
+      return this.subscriptionPlanRepository.findOne({ where: { id } });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async update(id: number, updateSubscriptionPlanDto: UpdateSubscriptionPlanDto): Promise<SubscriptionPlanEntity | null> {
-    const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id } });
-    if (!subscriptionPlan) {
-      return null;
+    try {
+      const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id } });
+      if (!subscriptionPlan) {
+        return null;
+      }
+      this.subscriptionPlanRepository.merge(subscriptionPlan, updateSubscriptionPlanDto);
+      return this.subscriptionPlanRepository.save(subscriptionPlan);
+    } catch (error) {
+      console.error(error);
     }
-    this.subscriptionPlanRepository.merge(subscriptionPlan, updateSubscriptionPlanDto);
-    await this.subscriptionPlanRepository.save(subscriptionPlan);
-    return subscriptionPlan;
   }
 
   async delete(id: number): Promise<boolean> {
-    const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id } });
-    if (!subscriptionPlan) {
-      return false;
+    try {
+      const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id } });
+      if (!subscriptionPlan) {
+        return false;
+      }
+      await this.subscriptionPlanRepository.remove(subscriptionPlan);
+      return true;
+    } catch (error) {
+      console.error(error);
     }
-    await this.subscriptionPlanRepository.remove(subscriptionPlan);
-    return true;
   }
 }

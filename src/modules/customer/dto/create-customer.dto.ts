@@ -1,7 +1,5 @@
-// src/modules/customer/dto/create-customer.dto.ts
-
-import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCustomerDto {
     @ApiProperty({ description: 'Name of the customer', example: 'John Doe' })

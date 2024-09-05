@@ -10,35 +10,37 @@ import { XFrameOptionsMiddleware } from './middleware/security/x-frame-options.m
 import { MicroServiceHealthCheckService } from './microservice-health-check.service';
 import { AuthenticationMiddleware } from './middleware/authentication.middleware';
 import { CacheConfigService } from './common/cache/config/cache_config.service';
+import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { DatabaseModule } from './modules/database/connection/database.module';
 import { ClusterModule, ClusterModuleOptions } from '@liaoliaots/nestjs-redis';
 import { CacheConfigModule } from './common/cache/config/cache_config.module';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import { HttpExceptionFilter } from './utils/filters/http-exeception.filter';
 import { CompressionMiddleware } from './middleware/compression.middleware';
+import { NotificationModule } from './notification/notification.module';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { CustomerModule } from './modules/customer/customer.module';
 import { ConfigModule as EnvConfigModule } from '@nestjs/config';
+import { InvoiceModule } from './modules/invoice/invoice.module';
+import { PaymentModule } from './modules/payment/payment.module';
 import { entitiesList } from './entitiesList/entities.list';
-import { KafkaModule } from './modules/kafka/kafka.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { AuthModule } from './modules/auth/auth.module';
 import { ShutdownService } from './shutdown.service';
+import { ScheduleModule } from '@nestjs/schedule';
 import { TerminusModule } from '@nestjs/terminus';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CqrsModule } from '@nestjs/cqrs';
 import Redis from 'ioredis';
 import 'dotenv/config';
-import { CustomerModule } from './modules/customer/customer.module';
-import { InvoiceModule } from './modules/invoice/invoice.module';
-import { NotificationModule } from './modules/notification/notification.module';
-import { PaymentModule } from './modules/payment/payment.module';
-import { SubscriptionModule } from './modules/subscription/subscription.module';
-import { AuthModule } from './modules/auth/auth.module';
 
 
 @Module({
   imports: [
-
+    EventEmitterModule.forRoot(), // Import EventEmitterModule
+    ScheduleModule.forRoot(),
     EnvConfigModule.forRoot(), // initializing config module for whole module,
     ClusterModule.forRootAsync({ // using this redis cluster module 
       imports: [CacheConfigModule],
@@ -87,13 +89,12 @@ import { AuthModule } from './modules/auth/auth.module';
     }),
     // Module listing
     CqrsModule,
-    KafkaModule,
     InvoiceModule,
     PaymentModule,
     CustomerModule,
     TerminusModule,
-    NotificationModule,
     SubscriptionModule,
+    NotificationModule,
     DatabaseModule.forRoot({ entities: entitiesList }),
     AuthModule,
 

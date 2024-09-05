@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put, UseGuards } from '@nestjs/common';
-import { CustomerService } from './customer.service';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CustomerEntity } from './entities/customer.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.gaurd';
+import { CustomerService } from './customer.service';
 
 @ApiTags('Customers')
 @Controller('customer')
@@ -30,6 +30,21 @@ export class CustomerController {
     };
   }
 
+  @Put('/:id/assign-subscription/:subscriptionPlanId')
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Assign a subscription plan to a customer' })
+  @ApiResponse({ status: 200, description: 'Subscription plan assigned successfully' })
+  @ApiResponse({ status: 404, description: 'Customer or subscription plan not found' })
+  @ApiParam({ name: 'id', type: String, description: 'Customer ID' })
+  async assignSubscription(
+    @Param('id') id: number,
+    @Param('subscriptionPlanId') subscriptionPlanId: number,
+  ) {
+    const updatedCustomer = await this.customerService.assignSubscriptionPlan(id, subscriptionPlanId);
+    return updatedCustomer;
+  }
+
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get()
@@ -41,8 +56,8 @@ export class CustomerController {
   }
 
 
-  @ApiBearerAuth()
   @Get('/:id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Retrieve a specific customer by ID' })
   @ApiResponse({ status: 200, description: 'Customer retrieved successfully', type: CustomerEntity })
@@ -50,8 +65,6 @@ export class CustomerController {
   @ApiParam({ name: 'id', type: String, description: 'Customer ID' })
   async getCustomerById(@Param('id') id: number): Promise<CustomerEntity> {
     const customer = await this.customerService.findById(id);
-    console.log(customer, '====customer======');
-
     if (!customer) {
       throw new NotFoundException(`Customer with ID ${id} not found.`);
     }
@@ -59,8 +72,8 @@ export class CustomerController {
   }
 
 
-  @ApiBearerAuth()
   @Put('/:id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update customer information' })
   @ApiResponse({ status: 200, description: 'Customer updated successfully' })
@@ -75,8 +88,8 @@ export class CustomerController {
   }
 
 
-  @ApiBearerAuth()
   @Delete('/:id')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a customer' })
   @ApiResponse({ status: 204, description: 'Customer deleted successfully' })

@@ -1,7 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { InvoiceEntity } from 'src/modules/invoice/entities/invoice.entity';
-import { SubscriptionPlanEntity } from 'src/modules/subscription/entities/subscription-plan.entity';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { SubscriptionPlanEntity } from 'src/modules/subscription/entities/subscription-plan.entity';
+import { InvoiceEntity } from 'src/modules/invoice/entities/invoice.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'customer' })
 export class CustomerEntity {
@@ -28,6 +28,13 @@ export class CustomerEntity {
 
     @Column({ name: 'subscription_status', nullable: false })
     subscription_status: string;
+
+    @Column({ type: 'date', nullable: true })
+    subscription_start_date: Date;
+
+    @Column({ type: 'date', nullable: false })
+    subscription_end_date: Date;
+
 
     @Column({ type: 'date' })
     last_payment_date: Date;
