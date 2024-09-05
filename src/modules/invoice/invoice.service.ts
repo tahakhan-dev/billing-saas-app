@@ -83,7 +83,7 @@ export class InvoiceService {
   }
 
   // Cron job to automatically generate invoices
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async generateInvoicesForDueCustomers() {
     const customers = await this.customerRepository.find({
       where: {

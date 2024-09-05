@@ -17,6 +17,17 @@ export class PaymentController {
   public async createPayment(@Body() createPaymentDto: CreatePaymentDto) {
     return await this.paymentService.create(createPaymentDto);
   }
+
+  @Patch('/:id/fail')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Handle a failed payment and retry' })
+  @ApiResponse({ status: 200, description: 'Payment retried and handled successfully.' })
+  @ApiParam({ name: 'id', type: 'number', description: 'Payment ID' })
+  public async handleFailedPayment(@Param('id') id: number) {
+    return await this.paymentService.handleFailedPayment(id);
+  }
+
+
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'List all payments' })

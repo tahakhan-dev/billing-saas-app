@@ -18,15 +18,76 @@ export class PaymentService {
   async create(createPaymentDto: CreatePaymentDto): Promise<PaymentEntity> {
     const { invoiceId, ...paymentDetails } = createPaymentDto;
 
-    // Check if invoice exists or not 
-    const existingInvoice = await this.invoiceRepository.findOne({ where: { id: invoiceId } });
+    // Check if the invoice exists
+    const existingInvoice = await this.invoiceRepository.findOne({ where: { id: invoiceId }, relations: ['payments'] });
     if (!existingInvoice) {
-      throw new NotFoundException(`No invoice id exists`);
+      throw new NotFoundException(`Invoice with ID ${invoiceId} not found.`);
     }
-    // Create the Payment with the resolved Invoice
 
+    console.log(existingInvoice, '====existingInvoice=======');
+
+
+    // Create the payment record
     const payment = this.paymentRepository.create({ invoice: existingInvoice, ...paymentDetails });
+    console.log(payment, '====payment===========');
+
     await this.paymentRepository.save(payment);
+
+    // Calculate the total amount paid for the invoice
+    const totalPayments = existingInvoice.payments.reduce((sum, p) => sum + p.amount, 0) + payment.amount;
+
+    // Update the invoice status if fully paid
+    if (totalPayments >= existingInvoice.amount) {
+      existingInvoice.status = 'paid';
+      await this.invoiceRepository.update({ id: existingInvoice.id }, { status: 'paid', paymentDate: new Date() });
+    } else {
+      // update the paymentDate
+      await this.invoiceRepository.update({ id: existingInvoice.id }, { paymentDate: new Date() });
+    }
+
+    return payment;
+  }
+
+  // Method to handle payment failure and retry
+  async handleFailedPayment(paymentId: number): Promise<PaymentEntity> {
+    const payment = await this.paymentRepository.findOne({ where: { id: paymentId }, relations: ['invoice'] });
+    if (!payment) {
+      throw new NotFoundException(`Payment with ID ${paymentId} not found.`);
+    }
+
+    // Mark payment as failed
+    payment.status = 'failed';
+    await this.paymentRepository.save(payment);
+
+    // Retry logic
+    const maxRetries = 3;
+    let retryCount = 0;
+
+    while (retryCount < maxRetries) {
+      try {
+        // Simulate retry logic (e.g., calling payment gateway again)
+        // Assuming some external service handles the payment processing
+
+        // If retry is successful, update status and return
+        payment.status = 'paid';
+        await this.paymentRepository.save(payment);
+
+        // Update invoice status if fully paid
+        const totalPayments = payment.invoice.payments.reduce((sum, p) => sum + p.amount, 0) + payment.amount;
+        if (totalPayments >= payment.invoice.amount) {
+          payment.invoice.status = 'paid';
+          await this.invoiceRepository.save(payment.invoice);
+        }
+        return payment;
+      } catch (error) {
+        retryCount++;
+      }
+    }
+
+    // If all retries fail, log the failure and return the failed payment
+    payment.status = 'failed_permanently';
+    await this.paymentRepository.save(payment);
+
     return payment;
   }
 
