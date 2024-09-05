@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,8 @@ import { Repository } from 'typeorm';
 import { CustomerEntity } from '../customer/entities/customer.entity';
 import { SubscriptionPlanEntity } from '../subscription/entities/subscription-plan.entity';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { InvoiceCreatedEvent } from 'src/email/events/invoice-created.event';
 
 @Injectable()
 export class InvoiceService {
@@ -15,6 +17,8 @@ export class InvoiceService {
     @InjectRepository(InvoiceEntity) private readonly invoiceRepository: Repository<InvoiceEntity>,
     @InjectRepository(CustomerEntity) private readonly customerRepository: Repository<CustomerEntity>,
     @InjectRepository(SubscriptionPlanEntity) private readonly subscriptionPlanRepository: Repository<SubscriptionPlanEntity>,
+    private readonly eventEmitter: EventEmitter2, // Inject EventEmitter
+
   ) { }
 
 
@@ -36,13 +40,23 @@ export class InvoiceService {
 
     // Create the customer with the  resolved invoice 
 
-    const customer = this.invoiceRepository.create({
+    const newInvoice = this.invoiceRepository.create({
       ...invoiceDetails,
       customer: existingCustomer,
       subscriptionPlan: subscriptionPlan
     });
 
-    return await this.invoiceRepository.save(customer);
+    const savedInvoice = await this.invoiceRepository.save(newInvoice);
+
+    // Send email notification
+    // Emit an event for the new invoice
+    this.eventEmitter.emit(
+      'invoice.created',
+      new InvoiceCreatedEvent(existingCustomer.email, savedInvoice.id, savedInvoice.amount),
+    );
+
+    return savedInvoice;
+
   }
 
   async findAll(): Promise<InvoiceEntity[]> {
@@ -102,7 +116,13 @@ export class InvoiceService {
         status: 'pending',
       });
 
-      await this.invoiceRepository.save(newInvoice);
+      const savedInvoice = await this.invoiceRepository.save(newInvoice);
+
+      // Emit an event for the new invoice
+      this.eventEmitter.emit(
+        'invoice.created',
+        new InvoiceCreatedEvent(customer.email, savedInvoice.id, savedInvoice.amount),
+      );
 
       // Update customer's subscription end date for the next billing cycle
       const endDate = new Date();

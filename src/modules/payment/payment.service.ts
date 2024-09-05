@@ -5,6 +5,9 @@ import { PaymentEntity } from './entities/payment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InvoiceEntity } from '../invoice/entities/invoice.entity';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { PaymentSuccessfulEvent } from 'src/email/events/payment-successful.event';
+import { PaymentFailedEvent } from 'src/email/events/payment-failed.event';
 
 @Injectable()
 export class PaymentService {
@@ -12,7 +15,7 @@ export class PaymentService {
   constructor(
     @InjectRepository(PaymentEntity) private readonly paymentRepository: Repository<PaymentEntity>,
     @InjectRepository(InvoiceEntity) private readonly invoiceRepository: Repository<InvoiceEntity>,
-
+    private readonly eventEmitter: EventEmitter2, // Inject EventEmitter
   ) { }
 
   async create(createPaymentDto: CreatePaymentDto): Promise<PaymentEntity> {
@@ -24,14 +27,9 @@ export class PaymentService {
       throw new NotFoundException(`Invoice with ID ${invoiceId} not found.`);
     }
 
-    console.log(existingInvoice, '====existingInvoice=======');
-
-
     // Create the payment record
     const payment = this.paymentRepository.create({ invoice: existingInvoice, ...paymentDetails });
-    console.log(payment, '====payment===========');
-
-    await this.paymentRepository.save(payment);
+    const savedPayment = await this.paymentRepository.save(payment);
 
     // Calculate the total amount paid for the invoice
     const totalPayments = existingInvoice.payments.reduce((sum, p) => sum + p.amount, 0) + payment.amount;
@@ -40,9 +38,12 @@ export class PaymentService {
     if (totalPayments >= existingInvoice.amount) {
       existingInvoice.status = 'paid';
       await this.invoiceRepository.update({ id: existingInvoice.id }, { status: 'paid', paymentDate: new Date() });
-    } else {
-      // update the paymentDate
-      await this.invoiceRepository.update({ id: existingInvoice.id }, { paymentDate: new Date() });
+
+      // Emit an event for successful payment
+      this.eventEmitter.emit(
+        'payment.successful',
+        new PaymentSuccessfulEvent(existingInvoice.customer.email, savedPayment.id, existingInvoice.id, payment.amount),
+      );
     }
 
     return payment;
@@ -59,6 +60,12 @@ export class PaymentService {
     payment.status = 'failed';
     await this.paymentRepository.save(payment);
 
+    // Emit an event for failed payment
+    this.eventEmitter.emit(
+      'payment.failed',
+      new PaymentFailedEvent(payment.invoice.customer.email, payment.id, payment.invoice.id, payment.amount),
+    );
+
     // Retry logic
     const maxRetries = 3;
     let retryCount = 0;
@@ -72,6 +79,11 @@ export class PaymentService {
         payment.status = 'paid';
         await this.paymentRepository.save(payment);
 
+        // Emit an event for failed payment
+        this.eventEmitter.emit(
+          'payment.failed',
+          new PaymentFailedEvent(payment.invoice.customer.email, payment.id, payment.invoice.id, payment.amount),
+        );
         // Update invoice status if fully paid
         const totalPayments = payment.invoice.payments.reduce((sum, p) => sum + p.amount, 0) + payment.amount;
         if (totalPayments >= payment.invoice.amount) {

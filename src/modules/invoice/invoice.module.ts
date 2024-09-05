@@ -8,7 +8,7 @@ import { SubscriptionPlanEntity } from '../subscription/entities/subscription-pl
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([InvoiceEntity,CustomerEntity,SubscriptionPlanEntity])
+    TypeOrmModule.forFeature([InvoiceEntity, CustomerEntity, SubscriptionPlanEntity])
   ],
   controllers: [InvoiceController],
   providers: [InvoiceService],

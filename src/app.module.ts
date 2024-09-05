@@ -30,15 +30,17 @@ import Redis from 'ioredis';
 import 'dotenv/config';
 import { CustomerModule } from './modules/customer/customer.module';
 import { InvoiceModule } from './modules/invoice/invoice.module';
-import { NotificationModule } from './modules/notification/notification.module';
 import { PaymentModule } from './modules/payment/payment.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { NotificationModule } from './notification/notification.module';
 
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(), // Import EventEmitterModule
     ScheduleModule.forRoot(),
     EnvConfigModule.forRoot(), // initializing config module for whole module,
     ClusterModule.forRootAsync({ // using this redis cluster module 
@@ -93,8 +95,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     PaymentModule,
     CustomerModule,
     TerminusModule,
-    NotificationModule,
     SubscriptionModule,
+    NotificationModule,
     DatabaseModule.forRoot({ entities: entitiesList }),
     AuthModule,
 
