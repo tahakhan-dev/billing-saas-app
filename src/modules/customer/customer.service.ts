@@ -34,8 +34,8 @@ export class CustomerService {
       }
 
       customer.subscriptionPlan = subscriptionPlan;
-      customer.subscription_status = 'active';
-      customer.subscription_start_date = new Date();
+      customer.subscriptionStatus = 'active';
+      customer.subscriptionEndDate = new Date();
 
       // Calculate subscription end date based on the plan's duration and billing cycle
       const endDate = new Date();
@@ -45,7 +45,7 @@ export class CustomerService {
         endDate.setMonth(endDate?.getMonth() + subscriptionPlan?.duration);
       }
 
-      customer.subscription_end_date = endDate;
+      customer.subscriptionEndDate = endDate;
       return this.customerRepository.save(customer);
     } catch (error) {
       console.error(error);
@@ -76,8 +76,8 @@ export class CustomerService {
         ...customerDetails,
         email, // Ensure email is included in the spread operation
         subscriptionPlan: subscriptionPlan,
-        subscription_status: 'active',
-        subscription_start_date: new Date(),
+        subscriptionStatus: 'active',
+        subscriptionStartDate: new Date(),
       });
 
       // Calculate subscription end date based on the plan's duration and billing cycle
@@ -87,7 +87,7 @@ export class CustomerService {
       } else if (subscriptionPlan?.billingCycle === 'months') {
         endDate.setMonth(endDate?.getMonth() + subscriptionPlan?.duration);
       }
-      customer.subscription_end_date = endDate;
+      customer.subscriptionEndDate = endDate;
 
       const savedCustomer = await this.customerRepository.save(customer);
       // Generate JWT token for the newly created customer
@@ -138,7 +138,7 @@ export class CustomerService {
 
         // Calculate days remaining in the current cycle
         const today = new Date();
-        const daysRemaining = Math.ceil((customer?.subscription_end_date?.getTime() - today?.getTime()) / (1000 * 3600 * 24));
+        const daysRemaining = Math.ceil((customer?.subscriptionEndDate?.getTime() - today?.getTime()) / (1000 * 3600 * 24));
 
         // Calculate prorated amount for the current plan
         const dailyRateOldPlan = customer?.subscriptionPlan?.price / customer?.subscriptionPlan?.duration;
@@ -165,7 +165,7 @@ export class CustomerService {
         } else if (newPlan?.billingCycle === 'months') {
           newEndDate.setMonth(newEndDate?.getMonth() + newPlan?.duration);
         }
-        customer.subscription_end_date = newEndDate;
+        customer.subscriptionEndDate = newEndDate;
 
         // Calculate the prorated amount for the new plan
         const dailyRateNewPlan = newPlan?.price / newPlan?.duration;
