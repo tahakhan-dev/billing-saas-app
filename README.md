@@ -1,4 +1,3 @@
-
 ## **Task 1: Case Study: Build a Simple Billing App for a SaaS Platform**
 
 ### Note:
@@ -149,7 +148,8 @@ This section delves into the primary functionalities and practical applications 
 ![image.png](src/public/images/markdown/image%204.png)
 
 - **Assign subscription plans to customers and manage their subscription status**
-**Steps:**
+  **Steps:**
+
 1. Retrieve a list of all customers.
 2. Choose a customer ID that you wish to manage.
 3. Assign a subscription plan to the selected customer using this API endpoint: `/api/customer/{id}/assign-subscription/{subscriptionPlanId}`.
@@ -161,7 +161,7 @@ This section delves into the primary functionalities and practical applications 
 ## **Billing Engine:**
 
 - **Automatically generate invoices at the end of each billing cycle based on the
-customer’s subscription plan**
+  customer’s subscription plan**
 
 **Steps :**
 
@@ -220,13 +220,15 @@ The deadline you gave me was reasonable, but I didn't get a chance to work on it
 
 ### 1. **Repository Pattern**
 
-- **Where it's used**: The repository pattern is used in the service layer to encapsulate the logic for interacting with the database. In  app, repositories like `CustomerRepository`, `InvoiceRepository`, and `SubscriptionPlanRepository` are used to abstract data persistence from the business logic.
+- **Where it's used**: The repository pattern is used in the service layer to encapsulate the logic for interacting with the database. In app, repositories like `CustomerRepository`, `InvoiceRepository`, and `SubscriptionPlanRepository` are used to abstract data persistence from the business logic.
 - **How it works**: Instead of writing database queries in the service layer, the repository provides an interface to perform CRUD operations. This pattern improves separation of concerns by isolating the database layer from the application logic.
 
 **Example**:
 
 ```jsx
-const customer = await this.customerRepository.findOne({ where: { id: customerId } });
+const customer = await this.customerRepository.findOne({
+  where: { id: customerId },
+});
 ```
 
 ### 2. **Service Layer Pattern**
@@ -234,11 +236,12 @@ const customer = await this.customerRepository.findOne({ where: { id: customerId
 - **Where it's used**: The **service layer** pattern is seen in your `CustomerService`, `InvoiceService`, `SubscriptionService`, and `PaymentService`. It provides a level of abstraction over business logic, keeping controllers thin and focused on handling HTTP requests.
 - **How it works**: The service layer contains business rules and logic. For instance, in `upgradeOrDowngradeSubscription()`, you calculate prorated costs, create invoices, and update subscription details. The service interacts with repositories and coordinates between them.
 - **Example**:
-    
-    ```tsx
-    const updatedCustomer = await this.customerService.update(customerId, updateCustomerDto);
-    ```
-    
+  ```tsx
+  const updatedCustomer = await this.customerService.update(
+    customerId,
+    updateCustomerDto,
+  );
+  ```
 
 ### 3. **Dependency Injection (DI) Pattern**
 
@@ -271,99 +274,15 @@ this.eventEmitter.emit('invoice.created', { invoiceId: newInvoice.id });
 3. **Dependency Injection**: Used throughout the application, as it's inherent in NestJS.
 4. **Event-Driven/Observer Pattern**: Used for sending notifications or triggering actions asynchronously after certain events (like invoice generation or payment success).
 
-Each of these design patterns is being used to make  application more modular, scalable, and maintainable.
+Each of these design patterns is being used to make application more modular, scalable, and maintainable.
 
 # **Deliverables:**
 
-1. I have provided you with a GitHub repository link to clone the project. 
+1. I have provided you with a GitHub repository link to clone the project.
 
 ```jsx
 https://github.com/tahakhan-dev/billing-saas-app.git
 ```
 
-1. This is a brief documentation to help you set up and configure the project. I've provided all the necessary steps for the setup.
-2. You can access the basic API documentation, which is built using Swagger. [http://localhost:3000/api_docs](http://localhost:3000/api_docs)
-
-## **Task 2: Code Refactoring**
-
-**Problematic Code:**
-
-**JavaScript:**
-
-```jsx
- app.get('/product/:productId', (req, res) => {
-       db.query(`SELECT * FROM products WHERE id=${req.params.productId}`, (err,
-   result) => {
-           if (err) throw err;
-           res.send(result);
-       });
-});
-```
-
-1. **SQL Injection Vulnerability:**
-    - **Problem:** The original code constructs an SQL query by directly embedding the `productId` from the request URL into the SQL statement. This practice is dangerous because it makes the application vulnerable to SQL injection attacks, where an attacker can manipulate the SQL query by crafting a malicious `productId`
-    - **Impact:** SQL injection can lead to unauthorized access to or manipulation of the database. An attacker might execute arbitrary SQL commands, potentially causing data breaches, data corruption, or even complete compromise of the database.
-    - **Solution:** Use parameterized queries (also known as prepared statements) to safely pass user input to the SQL query. Instead of directly embedding the `productId` into the query string, you should use a placeholder (`?` in MySQL, `$1` in PostgreSQL, etc.) and pass the user input as a separate parameter.
-    - **Implementation:**
-    
-    ```jsx
-    const query = 'SELECT * FROM products WHERE id = ?';
-    db.query(query, [req.params.productId], (err, result) => {
-        // Handle the result or error
-    });
-    ```
-    
-2. **Poor Error Handling:**
-    - **Problem:** The original code uses `throw err` within the callback function of the database query. While this will stop the code execution if an error occurs, it does not handle the error in a user-friendly manner. It might crash the entire server if not properly caught and handled elsewhere in the application.
-    - **Impact:** If an error occurs, the server might crash, leading to downtime and a poor user experience. Additionally, the lack of meaningful error messages makes it difficult for users to understand what went wrong and how they might rectify the issue.
-    - **Solution:** Instead of throwing the error with `throw err`, you should handle it gracefully by logging the error and returning an appropriate response to the client. This can be done using `console.error()` for logging and `res.status()` for setting the HTTP status code.
-    - **Implementation:**
-    
-    ```jsx
-    db.query(query, [req.params.productId], (err, result) => {
-        if (err) {
-            console.error('Database query error:', err);
-            return res.status(500).json({ message: 'Internal Server Error' });
-        }
-        // Handle the result
-    });
-    ```
-    
-3. **Missing Proper HTTP Status Codes:**
-    - **Problem:** The original code does not return appropriate HTTP status codes based on the outcome of the operation. For example, it does not handle scenarios where the requested product is not found in the database.
-    - **Impact:** Not returning the correct HTTP status codes can lead to confusion for the client applications consuming this API. It also violates RESTful API principles, where responses should include status codes that indicate the success or failure of a request.
-    - **Solution:** Use `res.status()` to return the correct HTTP status codes depending on the result of the operation. For example, return `404 Not Found` if the requested resource does not exist, and return `200 OK` for successful operations.
-    - **Implementation:**
-    
-    ```jsx
-    if (result.length === 0) {
-        return res.status(404).json({ message: 'Product not found' });
-    }
-    res.status(200).json(result);
-    ```
-    
-
-### **Refactored Code:**
-
-```jsx
-app.get('/product/:productId', (req, res) => {
-    const productId = req.params.productId;
-    
-    // Use a parameterized query to prevent SQL injection
-    const query = 'SELECT * FROM products WHERE id = ?';
-    db.query(query, [productId], (err, result) => {
-        if (err) {
-         // Log the error for debugging purposes
-            console.error(err); 
-            
-         // Send a 500 Internal Server Error response with a generic message
-            return res.status(500).send('Internal Server Error');
-        }
-        if (result.length === 0) {
-            return res.status(404).send('Product not found');
-        }
-        res.status(200).send(result);
-    });
-});
-
-```
+2. This is a brief documentation to help you set up and configure the project. I've provided all the necessary steps for the setup.
+3. You can access the basic API documentation, which is built using Swagger. [http://localhost:3000/api_docs](http://localhost:3000/api_docs)
