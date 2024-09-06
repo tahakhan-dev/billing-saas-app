@@ -1,73 +1,55 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Step-by-Step Guide to Setting Up Your SaaS Billing Platform
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Step # 1 : Installing Docker and Docker Compose:
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Start by downloading Docker, which includes Docker Compose as part of its desktop installation for Windows and Mac. For Linux users, Docker Compose must be installed separately. This setup will enable you to manage containerized applications smoothly. Visit the official Docker website to download the appropriate installer for your operating system and follow the provided installation instructions to set up both Docker and Docker Compose.
 
-## Description
+## Step # 2: Navigate to the Project's Root Directory
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+After cloning the repository, switch to the project's root folder to begin configuration and setup.
 
-## Installation
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/93faccac-c32e-40fc-b6c2-33185ed11872/b14aa0a8-077f-4fd4-9151-96ba25e24d52/image.png)
 
-```bash
-$ pnpm install
-```
+## Step # 4: Set Environment Variables for Docker Compose
 
-## Running the app
+Configure the required environment variables to ensure the Docker Compose setup runs correctly.
 
-```bash
-# development
-$ pnpm run start
+`PORT=3000`
+`CLUSTER_ENV=dev`
+**`#----- Database Credential------------------`** `DB_HOST=host.docker.internal`
+`DB_PORT=5433`
+` DB_USER=tahakhan`
+`DB_PASSWORD=`
+`DB_DATABASE=postgres`
+`DB_TYPE=postgres`
+`ENABLE_AUTOMATIC_CREATION=true` `AUTO_LOAD_ENTITIES=true` `JWT_SECRET=6502f2502a8b22bbbd724cd4efedcbe7fbdf47410cbb385e69c6494bcc107ea7`
+**`# ----------- EMAIL CREDENTIAL --------------------`**
+`SMTP_HOST=smtp.example.com`
+` EMAIL_USER=user`
+`EMAIL_PASSWORD=your-email-password` `SENDER_ADDRESS=send-email-address`
 
-# watch mode
-$ pnpm run start:dev
+## Step # 5: Launch PostgreSQL with Docker Compose
 
-# production mode
-$ pnpm run start:prod
-```
+This **`docker-compose.pg.yml`** file will set up a **PostgreSQL** container and automatically create the necessary databases. To automate this process, I've implemented a shell script.
 
-## Test
+**`docker-compose -f docker-compose.pg.yml up -d`**
 
-```bash
-# unit tests
-$ pnpm run test
+## Step # 6: Execute Docker Compose to Start the SaaS Billing Application
 
-# e2e tests
-$ pnpm run test:e2e
+Use Docker Compose to launch your SaaS billing application, initializing all necessary services defined in the **`docker-compose.yml`** file.
 
-# test coverage
-$ pnpm run test:cov
-```
+**`docker-compose up -d && docker-compose logs -f`**
 
-## Support
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/93faccac-c32e-40fc-b6c2-33185ed11872/443b4a15-11d7-4368-b222-1533f6e88082/image.png)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Step # 6.1: Implemented APP E2E Testing
 
-## Stay in touch
+End-to-end (E2E) testing has been implemented to verify that the entire application works as expected from start to finish, ensuring all components interact correctly and the user experience remains smooth.
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/93faccac-c32e-40fc-b6c2-33185ed11872/fd499434-1793-45f2-9c9d-304dd16d614e/image.png)
 
-## License
+## Step # 7: Access API Documentation:
 
-Nest is [MIT licensed](LICENSE).
+Visit **http://localhost:3000/api_docs** to view the API documentation for the SaaS billing application.
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/93faccac-c32e-40fc-b6c2-33185ed11872/98d28e3a-bc7b-440a-9403-481a63965343/image.png)
