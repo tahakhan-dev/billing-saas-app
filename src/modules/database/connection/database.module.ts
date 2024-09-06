@@ -1,5 +1,3 @@
-import { CacheConfigService } from '../../../common/cache/config/cache_config.service';
-import { CacheConfigModule } from '../../../common/cache/config/cache_config.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigDBData } from '../config/config.interface';
 import { ConfigService } from '../config/config.service';
@@ -18,10 +16,10 @@ export class DatabaseModule {
                 module: DatabaseModule,
                 imports: [
                     TypeOrmModule.forRootAsync({
-                        imports: [ConfigModule, CacheConfigModule],
-                        useFactory: (configService: ConfigService, cacheConfigService: CacheConfigService) =>
-                            DatabaseModule.getConnectionOptions(configService, dbconfig, cacheConfigService),
-                        inject: [ConfigService, CacheConfigService],
+                        imports: [ConfigModule],
+                        useFactory: (configService: ConfigService) =>
+                            DatabaseModule.getConnectionOptions(configService, dbconfig),
+                        inject: [ConfigService],
                     }),
                 ],
             };
@@ -30,11 +28,9 @@ export class DatabaseModule {
         }
     }
 
-    public static getConnectionOptions(config: ConfigService, dbconfig: DbConfig, cacheConfig: CacheConfigService): TypeOrmModuleOptions {
+    public static getConnectionOptions(config: ConfigService, dbconfig: DbConfig): TypeOrmModuleOptions {
         try {
             const dbdata = config?.get()?.db;
-            const cacheData = cacheConfig?.get()?.db
-            type dbCacheType = "database" | "redis" | "ioredis" | "ioredis/cluster"
 
             let connectionOptions: TypeOrmModuleOptions;
 
@@ -48,35 +44,6 @@ export class DatabaseModule {
                 entities: dbconfig?.entities,
                 autoLoadEntities: JSON.parse(process?.env?.AUTO_LOAD_ENTITIES) || dbdata?.autoLoadEntities,
                 logging: true,
-                cache: {
-                    type: cacheData?.cacheType as dbCacheType,
-                    options: {
-                        startupNodes: [
-                            {
-                                host: cacheData?.cacheNode1,
-                                port: cacheData?.cacheNodePort1,
-                            },
-                            {
-                                host: cacheData?.cacheNode2,
-                                port: cacheData?.cacheNodePort2,
-                            },
-                            {
-                                host: cacheData?.cacheNode3,
-                                port: cacheData?.cacheNodePort3,
-                            }
-                        ],
-                        options: {
-                            scaleReads: cacheData?.cacheClusterScaleRead,
-                            enableAutoPipelining: cacheData?.cacheEnableAutoPipelining,
-                            enableOfflineQueue: cacheData?.cacheEnableOfflineQueue,
-                            enableReadyCheck: cacheData?.cacheReadyCheck,
-                            clusterRetryStrategy: function (times) { return null },
-                            redisOptions: {
-                                maxRetriesPerRequest: 1
-                            }
-                        }
-                    }
-                }
                 // extra: {
                 //     "validateConnection": false,
                 //     "trustServerCertificate": true

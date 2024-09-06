@@ -27,17 +27,16 @@ export class CustomerEntity {
     subscriptionPlan: SubscriptionPlanEntity;
 
     @Column({ name: 'subscription_status', nullable: false })
-    subscription_status: string;
+    subscriptionStatus: string;
 
-    @Column({ type: 'date', nullable: true })
-    subscription_start_date: Date;
+    @Column({ name: 'subscription_start_date', type: 'date', nullable: true })
+    subscriptionStartDate: Date;
 
-    @Column({ type: 'date', nullable: false })
-    subscription_end_date: Date;
+    @Column({ name: "subscription_end_date", type: 'date', nullable: false })
+    subscriptionEndDate: Date;
 
-
-    @Column({ type: 'date' })
-    last_payment_date: Date;
+    @Column({ name: "last_payment_date", type: 'date', nullable: true })
+    lastPaymentDate: Date;
 
     @OneToMany(() => InvoiceEntity, invoice => invoice.customer)
     invoices: InvoiceEntity[];

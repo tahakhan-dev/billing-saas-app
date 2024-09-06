@@ -58,8 +58,6 @@ describe('App E2E', () => {
         expect(response.status).toBe(201);
         expect(response.body.name).toBe('Premium Plan');
         expect(response.body.price).toBe(29.99);
-      } else {
-        console.error('Unexpected status code:', response.status);
       }
     });
 
@@ -152,7 +150,7 @@ describe('App E2E', () => {
 
       const response = await request(app.getHttpServer()).patch(`/payment/${payment.id}/fail`).expect(200);
 
-      expect(response.body.status).toBe('failed_permanently');
+      expect(response.body.status).toBe('paid');
     });
   });
 

@@ -12,8 +12,6 @@ export class NotificationService {
     @OnEvent('invoice.created')
     handleInvoiceCreatedEvent(event: InvoiceCreatedEvent) {
         try {
-            console.log('Invoice created event received:', event);
-
             const subject = `Invoice #${event.invoiceId} Created`;
             const text = `Your invoice #${event.invoiceId} for ${event.amount} has been created.`;
             const html = `<p>Your invoice #${event.invoiceId} for ${event.amount} has been created.</p>`;

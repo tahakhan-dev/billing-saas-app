@@ -120,7 +120,7 @@ export class InvoiceService {
     try {
       const customers = await this.customerRepository.find({
         where: {
-          subscription_end_date: new Date(), // Find customers whose subscription ends today
+          subscriptionEndDate: new Date(), // Find customers whose subscription ends today
         },
         relations: ['subscriptionPlan'],
       });
@@ -150,7 +150,7 @@ export class InvoiceService {
         } else if (customer.subscriptionPlan.billingCycle === 'months') {
           endDate.setMonth(endDate.getMonth() + customer.subscriptionPlan.duration);
         }
-        customer.subscription_end_date = endDate;
+        customer.subscriptionEndDate = endDate;
         await this.customerRepository.save(customer);
       }
     } catch (error) {

@@ -34,8 +34,8 @@ export class CustomerService {
       }
 
       customer.subscriptionPlan = subscriptionPlan;
-      customer.subscription_status = 'active';
-      customer.subscription_start_date = new Date();
+      customer.subscriptionStatus = 'active';
+      customer.subscriptionEndDate = new Date();
 
       // Calculate subscription end date based on the plan's duration and billing cycle
       const endDate = new Date();
@@ -45,7 +45,7 @@ export class CustomerService {
         endDate.setMonth(endDate?.getMonth() + subscriptionPlan?.duration);
       }
 
-      customer.subscription_end_date = endDate;
+      customer.subscriptionEndDate = endDate;
       return this.customerRepository.save(customer);
     } catch (error) {
       console.error(error);
@@ -76,8 +76,8 @@ export class CustomerService {
         ...customerDetails,
         email, // Ensure email is included in the spread operation
         subscriptionPlan: subscriptionPlan,
-        subscription_status: 'active',
-        subscription_start_date: new Date(),
+        subscriptionStatus: 'active',
+        subscriptionStartDate: new Date(),
       });
 
       // Calculate subscription end date based on the plan's duration and billing cycle
@@ -87,9 +87,9 @@ export class CustomerService {
       } else if (subscriptionPlan?.billingCycle === 'months') {
         endDate.setMonth(endDate?.getMonth() + subscriptionPlan?.duration);
       }
-      customer.subscription_end_date = endDate;
+      customer.subscriptionEndDate = endDate;
 
-      const savedCustomer = await this.customerRepository.save(customer);
+      const savedCustomer = await this.customerRepository.save(customer);      
       // Generate JWT token for the newly created customer
       const payload = { email: savedCustomer?.email, sub: savedCustomer?.id };
 
@@ -138,7 +138,7 @@ export class CustomerService {
 
         // Calculate days remaining in the current cycle
         const today = new Date();
-        const daysRemaining = Math.ceil((customer?.subscription_end_date?.getTime() - today?.getTime()) / (1000 * 3600 * 24));
+        const daysRemaining = Math.ceil((customer?.subscriptionEndDate?.getTime() - today?.getTime()) / (1000 * 3600 * 24));
 
         // Calculate prorated amount for the current plan
         const dailyRateOldPlan = customer?.subscriptionPlan?.price / customer?.subscriptionPlan?.duration;
@@ -165,7 +165,7 @@ export class CustomerService {
         } else if (newPlan?.billingCycle === 'months') {
           newEndDate.setMonth(newEndDate?.getMonth() + newPlan?.duration);
         }
-        customer.subscription_end_date = newEndDate;
+        customer.subscriptionEndDate = newEndDate;
 
         // Calculate the prorated amount for the new plan
         const dailyRateNewPlan = newPlan?.price / newPlan?.duration;
@@ -189,6 +189,55 @@ export class CustomerService {
       console.error(error);
     }
 
+  }
+
+   // Function to upgrade or downgrade the subscription and handle prorated billing
+   async upgradeOrDowngradeSubscription(customerId: number, newPlanId: number): Promise<any> {
+    // Fetch the customer and current subscription details
+    const customer = await this.customerRepository.findOne({ where: { id: customerId }, relations: ['subscriptionPlan', 'invoices'] });
+    if (!customer) {
+      throw new NotFoundException(`Customer with ID ${customerId} not found.`);
+    }
+
+    // Fetch the new subscription plan details
+    const newPlan = await this.subscriptionPlanRepository.findOne({ where: { id: newPlanId } });
+    if (!newPlan) {
+      throw new NotFoundException(`Subscription Plan with ID ${newPlanId} not found.`);
+    }
+
+    const currentPlan = customer.subscriptionPlan;
+    const currentDate = new Date();
+
+    // Calculate the remaining time in the current cycle
+    const remainingDays = (customer.subscriptionEndDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24);
+    const totalDaysInCycle = (customer.subscriptionEndDate.getTime() - customer.subscriptionStartDate.getTime()) / (1000 * 60 * 60 * 24);
+
+    // Calculate prorated amounts for both plans
+    const proratedCurrentPlanCost = (currentPlan.price / totalDaysInCycle) * remainingDays;
+    const proratedNewPlanCost = (newPlan.price / totalDaysInCycle) * remainingDays;
+
+    // Calculate cost difference (this could be positive for upgrades, or negative for downgrades)
+    const costDifference = proratedNewPlanCost - proratedCurrentPlanCost;
+
+    // Create a new prorated invoice only for the difference
+    const newInvoice = this.invoiceRepository.create({
+      customer,
+      subscriptionPlan: newPlan,
+      amount: costDifference,
+      issueDate: currentDate,
+      dueDate: new Date(currentDate.setDate(currentDate.getDate() + 30)),
+      status: 'pending',
+    });
+    await this.invoiceRepository.save(newInvoice);
+
+    // Update the customer's subscription plan and dates
+    customer.subscriptionPlan = newPlan;
+    customer.subscriptionStartDate = currentDate;
+    customer.subscriptionEndDate = new Date(currentDate.setDate(currentDate.getDate() + newPlan.duration));
+
+    await this.customerRepository.save(customer);
+
+    return { message: 'Subscription updated and prorated invoice created.', invoice: newInvoice };
   }
 
   async delete(id: number): Promise<boolean> {
