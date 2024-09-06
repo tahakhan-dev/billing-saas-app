@@ -35,7 +35,7 @@ export class CustomerEntity {
     @Column({ name: "subscription_end_date", type: 'date', nullable: false })
     subscriptionEndDate: Date;
 
-    @Column({ name: "last_payment_date", type: 'date' })
+    @Column({ name: "last_payment_date", type: 'date', nullable: true })
     lastPaymentDate: Date;
 
     @OneToMany(() => InvoiceEntity, invoice => invoice.customer)

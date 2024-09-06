@@ -89,7 +89,7 @@ export class CustomerService {
       }
       customer.subscriptionEndDate = endDate;
 
-      const savedCustomer = await this.customerRepository.save(customer);
+      const savedCustomer = await this.customerRepository.save(customer);      
       // Generate JWT token for the newly created customer
       const payload = { email: savedCustomer?.email, sub: savedCustomer?.id };
 
@@ -189,6 +189,55 @@ export class CustomerService {
       console.error(error);
     }
 
+  }
+
+   // Function to upgrade or downgrade the subscription and handle prorated billing
+   async upgradeOrDowngradeSubscription(customerId: number, newPlanId: number): Promise<any> {
+    // Fetch the customer and current subscription details
+    const customer = await this.customerRepository.findOne({ where: { id: customerId }, relations: ['subscriptionPlan', 'invoices'] });
+    if (!customer) {
+      throw new NotFoundException(`Customer with ID ${customerId} not found.`);
+    }
+
+    // Fetch the new subscription plan details
+    const newPlan = await this.subscriptionPlanRepository.findOne({ where: { id: newPlanId } });
+    if (!newPlan) {
+      throw new NotFoundException(`Subscription Plan with ID ${newPlanId} not found.`);
+    }
+
+    const currentPlan = customer.subscriptionPlan;
+    const currentDate = new Date();
+
+    // Calculate the remaining time in the current cycle
+    const remainingDays = (customer.subscriptionEndDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24);
+    const totalDaysInCycle = (customer.subscriptionEndDate.getTime() - customer.subscriptionStartDate.getTime()) / (1000 * 60 * 60 * 24);
+
+    // Calculate prorated amounts for both plans
+    const proratedCurrentPlanCost = (currentPlan.price / totalDaysInCycle) * remainingDays;
+    const proratedNewPlanCost = (newPlan.price / totalDaysInCycle) * remainingDays;
+
+    // Calculate cost difference (this could be positive for upgrades, or negative for downgrades)
+    const costDifference = proratedNewPlanCost - proratedCurrentPlanCost;
+
+    // Create a new prorated invoice only for the difference
+    const newInvoice = this.invoiceRepository.create({
+      customer,
+      subscriptionPlan: newPlan,
+      amount: costDifference,
+      issueDate: currentDate,
+      dueDate: new Date(currentDate.setDate(currentDate.getDate() + 30)),
+      status: 'pending',
+    });
+    await this.invoiceRepository.save(newInvoice);
+
+    // Update the customer's subscription plan and dates
+    customer.subscriptionPlan = newPlan;
+    customer.subscriptionStartDate = currentDate;
+    customer.subscriptionEndDate = new Date(currentDate.setDate(currentDate.getDate() + newPlan.duration));
+
+    await this.customerRepository.save(customer);
+
+    return { message: 'Subscription updated and prorated invoice created.', invoice: newInvoice };
   }
 
   async delete(id: number): Promise<boolean> {

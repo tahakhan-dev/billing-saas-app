@@ -45,6 +45,18 @@ export class CustomerController {
     return updatedCustomer;
   }
 
+  @Put('/:id/subscription-upgrade-downgrade')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Upgrade or downgrade a customer subscription plan with prorated billing' })
+  @ApiResponse({ status: 200, description: 'Subscription updated successfully and prorated invoice generated.' })
+  @ApiResponse({ status: 404, description: 'Customer or subscription plan not found.' })
+  @ApiParam({ name: 'id', type: 'number', description: 'Customer ID' })
+  async upgradeOrDowngradeSubscription(@Param('id') id: number, @Body() body: { newPlanId: number }) {
+    const { newPlanId } = body;
+    const result = await this.customerService.upgradeOrDowngradeSubscription(id, newPlanId);
+    return result;
+  }
+
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get()
