@@ -1,17 +1,24 @@
 import { SubscriptionPlanEntity } from 'src/modules/subscription/entities/subscription-plan.entity';
 import { SubscriptionPlanStatus } from 'src/common/enums/generic.enum';
+import { InjectEntityManager } from "@nestjs/typeorm";
+import { Repository, EntityManager } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class Seeder {
     constructor(
         @InjectRepository(SubscriptionPlanEntity)
         private readonly subscriptionPlanRepository: Repository<SubscriptionPlanEntity>,
+        @InjectEntityManager() private readonly entityManager: EntityManager,
+
     ) { }
 
     async seed() {
+        await this.entityManager.query(`truncate table subscription_plan CASCADE;
+                                        truncate table customer CASCADE ;
+                                        truncate table invoice CASCADE ;
+                                        truncate table payment CASCADE;`);
         const subscriptionPlans = [
             { name: 'Basic Plan', price: 9.99, duration: 30, billingCycle: 'days', status: SubscriptionPlanStatus.ACTIVE, features: 'Access to basic features' },
             { name: 'Standard Plan', price: 19.99, duration: 1, billingCycle: 'months', status: SubscriptionPlanStatus.ACTIVE, features: 'Access to standard features plus 24/7 support' },

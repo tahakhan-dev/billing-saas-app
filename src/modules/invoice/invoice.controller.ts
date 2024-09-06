@@ -38,8 +38,6 @@ export class InvoiceController {
   @ApiParam({ name: 'id', type: 'number', description: 'Invoice ID' })
   async getInvoiceById(@Param('id') id: number): Promise<InvoiceEntity> {
     const invoice = await this.invoiceService.findById(id);
-    console.log(invoice, '===invoice====');
-
     if (!invoice) {
       throw new NotFoundException(`Invoice with ID ${id} not found.`);
     }

@@ -12,18 +12,18 @@ export class SubscriptionService {
   ) { }
 
   async create(createSubscriptionPlanDto: CreateSubscriptionPlanDto): Promise<SubscriptionPlanEntity> {
-    try {
-      const { name } = createSubscriptionPlanDto;
-      const existingPlan = await this.subscriptionPlanRepository.findOne({ where: { name } });
-      if (existingPlan) {
-        throw new ConflictException(`A subscription plan with the name '${name}' already exists.`);
-      }
 
-      const newPlan = this.subscriptionPlanRepository.create(createSubscriptionPlanDto);
-      return this.subscriptionPlanRepository.save(newPlan);
-    } catch (error) {
-      console.error(error);
+    const { name } = createSubscriptionPlanDto;
+
+    const existingPlan = await this.subscriptionPlanRepository.findOne({ where: { name } });
+    if (existingPlan) {
+      throw new ConflictException(`A subscription plan with the name '${name}' already exists.`);
     }
+
+    const newPlan = this.subscriptionPlanRepository.create(createSubscriptionPlanDto);
+
+    return this.subscriptionPlanRepository.save(newPlan);
+
   }
 
 

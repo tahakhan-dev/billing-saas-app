@@ -1,5 +1,9 @@
 FROM node:18 
+
+# Set the working directory
 WORKDIR /app
+
+# Copy package.json and install dependencies
 COPY package*.json ./
 
 
@@ -19,9 +23,11 @@ RUN npm i -g npm@latest; \
  pnpm install
 
 
-
+# Copy all files into the container
 COPY . . 
 
+# Build the application
 RUN pnpm run build 
 
-CMD [ "pnpm", "run", "start:prod" ]
+# Run e2e tests first, and if they pass, start the application
+CMD pnpm run test:e2e --detectOpenHandles && pnpm run start:prod
