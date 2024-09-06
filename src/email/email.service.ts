@@ -7,19 +7,19 @@ export class EmailService {
 
     constructor() {
         this.transporter = nodemailer.createTransport({
-            host: 'smtp.example.com', // Replace with your SMTP host
+            host: process.env.SMTP_HOST, // Replace with your SMTP host
             port: 587,
             secure: false,
             auth: {
-                user: 'your-email@example.com', // Replace with your email
-                pass: 'your-email-password', // Replace with your email password
+                user: process.env.EMAIL_USER, // Replace with your email
+                pass: process.env.EMAIL_PASSWORD, // Replace with your email password
             },
         });
     }
 
     async sendEmail(to: string, subject: string, text: string, html: string) {
         const mailOptions = {
-            from: '"Your App Name" <no-reply@example.com>', // Replace with your sender address
+            from: process.env.SENDER_ADDRESS, // Replace with your sender address
             to,
             subject,
             text,
