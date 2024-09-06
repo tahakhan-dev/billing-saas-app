@@ -35,6 +35,9 @@ import { AppService } from './app.service';
 import { CqrsModule } from '@nestjs/cqrs';
 import Redis from 'ioredis';
 import 'dotenv/config';
+import { Seeder } from './utils/seeder/seeder.service';
+import { SubscriptionPlanEntity } from './modules/subscription/entities/subscription-plan.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 
 @Module({
@@ -96,15 +99,17 @@ import 'dotenv/config';
     SubscriptionModule,
     NotificationModule,
     DatabaseModule.forRoot({ entities: entitiesList }),
+    TypeOrmModule.forFeature([SubscriptionPlanEntity]),
     AuthModule,
 
   ],
   controllers: [AppController],
   providers: [
+    Seeder,
     AppService,
     ShutdownService,
-    MicroServiceHealthCheckService,
     LoggingFunctions,
+    MicroServiceHealthCheckService,
     {
       provide: APP_INTERCEPTOR,
       scope: Scope.REQUEST,
@@ -121,6 +126,13 @@ import 'dotenv/config';
   ],
 })
 export class AppModule implements NestModule {
+  constructor(private readonly seeder: Seeder) { }
+  // This hook will run after the application has initialized and TypeORM has synchronized.
+  async onModuleInit() {
+    // Seed database after synchronization
+    await this.seeder.seed();
+  }
+
   configure(consumer: MiddlewareConsumer) { // this configure function here get access to this middleware consumer 
     consumer?.apply(
       AuthenticationMiddleware,
