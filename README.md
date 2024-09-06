@@ -14,19 +14,25 @@ After cloning the repository, switch to the project's root folder to begin confi
 
 Configure the required environment variables to ensure the Docker Compose setup runs correctly.
 
-`PORT=3000`
-`CLUSTER_ENV=dev`
-**`#----- Database Credential------------------`** `DB_HOST=host.docker.internal`
-`DB_PORT=5433`
-` DB_USER=tahakhan`
-`DB_PASSWORD=`
-`DB_DATABASE=postgres`
-`DB_TYPE=postgres`
-`ENABLE_AUTOMATIC_CREATION=true` `AUTO_LOAD_ENTITIES=true` `JWT_SECRET=6502f2502a8b22bbbd724cd4efedcbe7fbdf47410cbb385e69c6494bcc107ea7`
-**`# ----------- EMAIL CREDENTIAL --------------------`**
-`SMTP_HOST=smtp.example.com`
-` EMAIL_USER=user`
-`EMAIL_PASSWORD=your-email-password` `SENDER_ADDRESS=send-email-address`
+```bash
+PORT=3000
+CLUSTER_ENV=dev
+#----- Database Credential------------------
+DB_HOST=host.docker.internal
+DB_PORT=5433
+DB_USER=tahakhan
+DB_PASSWORD=
+DB_DATABASE=postgres
+DB_TYPE=postgres
+ENABLE_AUTOMATIC_CREATION=true
+AUTO_LOAD_ENTITIES=true
+JWT_SECRET=6502f2502a8b22bbbd724cd4efedcbe7fbdf47410cbb385e69c6494bcc107ea7
+# ----------- EMAIL CREDENTIAL --------------------
+SMTP_HOST=smtp.example.com
+EMAIL_USER=user
+EMAIL_PASSWORD=your-email-password
+SENDER_ADDRESS=send-email-address
+```
 
 ## Step # 5: Launch PostgreSQL with Docker Compose
 
