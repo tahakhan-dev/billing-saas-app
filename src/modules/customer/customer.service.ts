@@ -21,85 +21,80 @@ export class CustomerService {
   ) { }
 
   async assignSubscriptionPlan(customerId: number, subscriptionPlanId: number): Promise<CustomerEntity> {
-    try {
 
-      const customer = await this.customerRepository.findOne({ where: { id: customerId }, relations: ['subscriptionPlan'] });
-      if (!customer) {
-        throw new NotFoundException(`Customer with ID ${customerId} not found.`);
-      }
-
-      const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id: subscriptionPlanId } });
-      if (!subscriptionPlan) {
-        throw new NotFoundException(`Subscription plan with ID ${subscriptionPlanId} not found.`);
-      }
-
-      customer.subscriptionPlan = subscriptionPlan;
-      customer.subscriptionStatus = 'active';
-      customer.subscriptionEndDate = new Date();
-
-      // Calculate subscription end date based on the plan's duration and billing cycle
-      const endDate = new Date();
-      if (subscriptionPlan?.billingCycle === 'days') {
-        endDate.setDate(endDate?.getDate() + subscriptionPlan?.duration);
-      } else if (subscriptionPlan.billingCycle === 'months') {
-        endDate.setMonth(endDate?.getMonth() + subscriptionPlan?.duration);
-      }
-
-      customer.subscriptionEndDate = endDate;
-      return this.customerRepository.save(customer);
-    } catch (error) {
-      console.error(error);
+    const customer = await this.customerRepository.findOne({ where: { id: customerId }, relations: ['subscriptionPlan'] });
+    if (!customer) {
+      throw new NotFoundException(`Customer with ID ${customerId} not found.`);
     }
+
+    const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id: subscriptionPlanId } });
+    if (!subscriptionPlan) {
+      throw new NotFoundException(`Subscription plan with ID ${subscriptionPlanId} not found.`);
+    }
+
+    customer.subscriptionPlan = subscriptionPlan;
+    customer.subscriptionStatus = 'active';
+    customer.subscriptionEndDate = new Date();
+
+    // Calculate subscription end date based on the plan's duration and billing cycle
+    const endDate = new Date();
+    if (subscriptionPlan?.billingCycle === 'days') {
+      endDate.setDate(endDate?.getDate() + subscriptionPlan?.duration);
+    } else if (subscriptionPlan.billingCycle === 'months') {
+      endDate.setMonth(endDate?.getMonth() + subscriptionPlan?.duration);
+    }
+
+    customer.subscriptionEndDate = endDate;
+    return this.customerRepository.save(customer);
+
   }
 
   async create(createCustomerDto: CreateCustomerDto): Promise<{ customer: CustomerEntity, accessToken: string }> {
-    try {
-      const { subscriptionPlanId, email, ...customerDetails } = createCustomerDto;
 
-      // Check if customer with the same email already exists
-      const existingCustomer = await this.customerRepository.findOne({ where: { email } });
+    const { subscriptionPlanId, email, ...customerDetails } = createCustomerDto;
 
-      if (existingCustomer) {
-        const payload = { email: existingCustomer?.email, sub: existingCustomer?.id };
-        const accessToken = await this.jwtService.signAsync({ ...payload }, { secret: jwtConstants?.secret });
-        return { customer: existingCustomer, accessToken };
-      }
+    // Check if customer with the same email already exists
+    const existingCustomer = await this.customerRepository.findOne({ where: { email } });
 
-      // Find the subscription plan
-      const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id: subscriptionPlanId } });
-      if (!subscriptionPlan) {
-        throw new NotFoundException(`Subscription Plan with ID ${subscriptionPlanId} not found`);
-      }
-
-      // Create the customer with the resolved subscription plan
-      const customer = this.customerRepository.create({
-        ...customerDetails,
-        email, // Ensure email is included in the spread operation
-        subscriptionPlan: subscriptionPlan,
-        subscriptionStatus: 'active',
-        subscriptionStartDate: new Date(),
-      });
-
-      // Calculate subscription end date based on the plan's duration and billing cycle
-      const endDate = new Date();
-      if (subscriptionPlan?.billingCycle === 'days') {
-        endDate.setDate(endDate?.getDate() + subscriptionPlan?.duration);
-      } else if (subscriptionPlan?.billingCycle === 'months') {
-        endDate.setMonth(endDate?.getMonth() + subscriptionPlan?.duration);
-      }
-      customer.subscriptionEndDate = endDate;
-
-      const savedCustomer = await this.customerRepository.save(customer);      
-      // Generate JWT token for the newly created customer
-      const payload = { email: savedCustomer?.email, sub: savedCustomer?.id };
-
+    if (existingCustomer) {
+      const payload = { email: existingCustomer?.email, sub: existingCustomer?.id };
       const accessToken = await this.jwtService.signAsync({ ...payload }, { secret: jwtConstants?.secret });
-
-      // Return both the customer details and the JWT token
-      return { customer: savedCustomer, accessToken };
-    } catch (error) {
-      console.error(error);
+      return { customer: existingCustomer, accessToken };
     }
+
+    // Find the subscription plan
+    const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id: subscriptionPlanId } });
+    if (!subscriptionPlan) {
+      throw new NotFoundException(`Subscription Plan with ID ${subscriptionPlanId} not found`);
+    }
+
+    // Create the customer with the resolved subscription plan
+    const customer = this.customerRepository.create({
+      ...customerDetails,
+      email, // Ensure email is included in the spread operation
+      subscriptionPlan: subscriptionPlan,
+      subscriptionStatus: 'active',
+      subscriptionStartDate: new Date(),
+    });
+
+    // Calculate subscription end date based on the plan's duration and billing cycle
+    const endDate = new Date();
+    if (subscriptionPlan?.billingCycle === 'days') {
+      endDate.setDate(endDate?.getDate() + subscriptionPlan?.duration);
+    } else if (subscriptionPlan?.billingCycle === 'months') {
+      endDate.setMonth(endDate?.getMonth() + subscriptionPlan?.duration);
+    }
+    customer.subscriptionEndDate = endDate;
+
+    const savedCustomer = await this.customerRepository.save(customer);
+    // Generate JWT token for the newly created customer
+    const payload = { email: savedCustomer?.email, sub: savedCustomer?.id };
+
+    const accessToken = await this.jwtService.signAsync({ ...payload }, { secret: jwtConstants?.secret });
+
+    // Return both the customer details and the JWT token
+    return { customer: savedCustomer, accessToken };
+
   }
 
   async findAll(): Promise<CustomerEntity[]> {
@@ -124,75 +119,71 @@ export class CustomerService {
 
   async update(id: number, updateCustomerDto: UpdateCustomerDto): Promise<CustomerEntity> {
 
-    try {
-      const customer = await this.customerRepository.findOne({ where: { id }, relations: ['subscriptionPlan'] });
-      if (!customer) {
-        throw new NotFoundException(`Customer with ID ${id} not found.`);
-      }
 
-      if (updateCustomerDto?.subscriptionPlanId) {
-        const newPlan = await this.subscriptionPlanRepository.findOne({ where: { id: updateCustomerDto?.subscriptionPlanId } });
-        if (!newPlan) {
-          throw new NotFoundException(`Subscription Plan with ID ${updateCustomerDto?.subscriptionPlanId} not found.`);
-        }
-
-        // Calculate days remaining in the current cycle
-        const today = new Date();
-        const daysRemaining = Math.ceil((customer?.subscriptionEndDate?.getTime() - today?.getTime()) / (1000 * 3600 * 24));
-
-        // Calculate prorated amount for the current plan
-        const dailyRateOldPlan = customer?.subscriptionPlan?.price / customer?.subscriptionPlan?.duration;
-        const proratedAmountOldPlan = dailyRateOldPlan * daysRemaining;
-
-        // Create an invoice for the old plan prorated amount
-        const oldPlanInvoice = this.invoiceRepository.create({
-          customer: customer,
-          subscriptionPlan: customer?.subscriptionPlan,
-          amount: proratedAmountOldPlan,
-          issueDate: new Date(),
-          dueDate: new Date(new Date().setDate(new Date().getDate() + 30)), // assuming 30-day payment terms
-          status: 'pending',
-        });
-        await this.invoiceRepository.save(oldPlanInvoice);
-
-        // Assign the new plan to the customer
-        customer.subscriptionPlan = newPlan;
-
-        // Calculate new subscription end date
-        const newEndDate = new Date();
-        if (newPlan?.billingCycle === 'days') {
-          newEndDate.setDate(newEndDate?.getDate() + newPlan?.duration);
-        } else if (newPlan?.billingCycle === 'months') {
-          newEndDate.setMonth(newEndDate?.getMonth() + newPlan?.duration);
-        }
-        customer.subscriptionEndDate = newEndDate;
-
-        // Calculate the prorated amount for the new plan
-        const dailyRateNewPlan = newPlan?.price / newPlan?.duration;
-        const proratedAmountNewPlan = dailyRateNewPlan * (newPlan?.duration - daysRemaining);
-
-        // Create an invoice for the new plan prorated amount
-        const newPlanInvoice = this.invoiceRepository.create({
-          customer: customer,
-          subscriptionPlan: newPlan,
-          amount: proratedAmountNewPlan,
-          issueDate: new Date(),
-          dueDate: new Date(new Date().setDate(new Date().getDate() + 30)), // assuming 30-day payment terms
-          status: 'pending',
-        });
-        await this.invoiceRepository.save(newPlanInvoice);
-      }
-
-      this.customerRepository.merge(customer, updateCustomerDto);
-      return await this.customerRepository.save(customer);
-    } catch (error) {
-      console.error(error);
+    const customer = await this.customerRepository.findOne({ where: { id }, relations: ['subscriptionPlan'] });
+    if (!customer) {
+      throw new NotFoundException(`Customer with ID ${id} not found.`);
     }
 
+    if (updateCustomerDto?.subscriptionPlanId) {
+      const newPlan = await this.subscriptionPlanRepository.findOne({ where: { id: updateCustomerDto?.subscriptionPlanId } });
+      if (!newPlan) {
+        throw new NotFoundException(`Subscription Plan with ID ${updateCustomerDto?.subscriptionPlanId} not found.`);
+      }
+
+      // Calculate days remaining in the current cycle
+      const today = new Date();
+      const daysRemaining = Math.ceil((customer?.subscriptionEndDate?.getTime() - today?.getTime()) / (1000 * 3600 * 24));
+
+      // Calculate prorated amount for the current plan
+      const dailyRateOldPlan = customer?.subscriptionPlan?.price / customer?.subscriptionPlan?.duration;
+      const proratedAmountOldPlan = dailyRateOldPlan * daysRemaining;
+
+      // Create an invoice for the old plan prorated amount
+      const oldPlanInvoice = this.invoiceRepository.create({
+        customer: customer,
+        subscriptionPlan: customer?.subscriptionPlan,
+        amount: proratedAmountOldPlan,
+        issueDate: new Date(),
+        dueDate: new Date(new Date().setDate(new Date().getDate() + 30)), // assuming 30-day payment terms
+        status: 'pending',
+      });
+      await this.invoiceRepository.save(oldPlanInvoice);
+
+      // Assign the new plan to the customer
+      customer.subscriptionPlan = newPlan;
+
+      // Calculate new subscription end date
+      const newEndDate = new Date();
+      if (newPlan?.billingCycle === 'days') {
+        newEndDate.setDate(newEndDate?.getDate() + newPlan?.duration);
+      } else if (newPlan?.billingCycle === 'months') {
+        newEndDate.setMonth(newEndDate?.getMonth() + newPlan?.duration);
+      }
+      customer.subscriptionEndDate = newEndDate;
+
+      // Calculate the prorated amount for the new plan
+      const dailyRateNewPlan = newPlan?.price / newPlan?.duration;
+      const proratedAmountNewPlan = dailyRateNewPlan * (newPlan?.duration - daysRemaining);
+
+      // Create an invoice for the new plan prorated amount
+      const newPlanInvoice = this.invoiceRepository.create({
+        customer: customer,
+        subscriptionPlan: newPlan,
+        amount: proratedAmountNewPlan,
+        issueDate: new Date(),
+        dueDate: new Date(new Date().setDate(new Date().getDate() + 30)), // assuming 30-day payment terms
+        status: 'pending',
+      });
+      await this.invoiceRepository.save(newPlanInvoice);
+    }
+
+    this.customerRepository.merge(customer, updateCustomerDto);
+    return await this.customerRepository.save(customer);
   }
 
-   // Function to upgrade or downgrade the subscription and handle prorated billing
-   async upgradeOrDowngradeSubscription(customerId: number, newPlanId: number): Promise<any> {
+  // Function to upgrade or downgrade the subscription and handle prorated billing
+  async upgradeOrDowngradeSubscription(customerId: number, newPlanId: number): Promise<any> {
     // Fetch the customer and current subscription details
     const customer = await this.customerRepository.findOne({ where: { id: customerId }, relations: ['subscriptionPlan', 'invoices'] });
     if (!customer) {

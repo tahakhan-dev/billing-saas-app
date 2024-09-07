@@ -25,42 +25,38 @@ export class InvoiceService {
 
   async create(createInvoiceDto: CreateInvoiceDto): Promise<InvoiceEntity> {
 
-    try {
-      const { subscriptionPlanId, customerId, ...invoiceDetails } = createInvoiceDto;
+    const { subscriptionPlanId, customerId, ...invoiceDetails } = createInvoiceDto;
 
-      // Check if customer with the same email already exists
-      const existingCustomer = await this.customerRepository.findOne({ where: { id: customerId } });
-      if (!existingCustomer) {
-        throw new NotFoundException(`This Customer Does not Exists.`);
-      }
-
-      // Find the subscription plan
-      const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id: subscriptionPlanId } });
-      if (!subscriptionPlan) {
-        throw new NotFoundException(`Subscription Plan with ID ${subscriptionPlanId} not found`);
-      }
-
-      // Create the customer with the  resolved invoice 
-
-      const newInvoice = this.invoiceRepository.create({
-        ...invoiceDetails,
-        customer: existingCustomer,
-        subscriptionPlan: subscriptionPlan
-      });
-
-      const savedInvoice = await this.invoiceRepository.save(newInvoice);
-
-      // Send email notification
-      // Emit an event for the new invoice
-      this.eventEmitter.emit(
-        'invoice.created',
-        new InvoiceCreatedEvent(existingCustomer.email, savedInvoice.id, savedInvoice.amount),
-      );
-
-      return savedInvoice;
-    } catch (error) {
-      console.error(error);
+    // Check if customer with the same email already exists
+    const existingCustomer = await this.customerRepository.findOne({ where: { id: customerId } });
+    if (!existingCustomer) {
+      throw new NotFoundException(`This Customer Does not Exists.`);
     }
+
+    // Find the subscription plan
+    const subscriptionPlan = await this.subscriptionPlanRepository.findOne({ where: { id: subscriptionPlanId } });
+    if (!subscriptionPlan) {
+      throw new NotFoundException(`Subscription Plan with ID ${subscriptionPlanId} not found`);
+    }
+
+    // Create the customer with the  resolved invoice 
+
+    const newInvoice = this.invoiceRepository.create({
+      ...invoiceDetails,
+      customer: existingCustomer,
+      subscriptionPlan: subscriptionPlan
+    });
+
+    const savedInvoice = await this.invoiceRepository.save(newInvoice);
+
+    // Send email notification
+    // Emit an event for the new invoice
+    this.eventEmitter.emit(
+      'invoice.created',
+      new InvoiceCreatedEvent(existingCustomer.email, savedInvoice.id, savedInvoice.amount),
+    );
+
+    return savedInvoice;
   }
 
   async findAll(): Promise<InvoiceEntity[]> {
