@@ -1,12 +1,4 @@
-## **Task 1: Case Study: Build a Simple Billing App for a SaaS Platform**
-
-### Note:
-
-I had planned to build the SaaS billing app architecture using microservices with an event-driven approach, leveraging gRPC and Kafka. However, due to some office deadlines, I ended up going with a monolithic architecture instead.
-
-### **Problem Statement:**
-
-Your task is to design and implement a billing app for a SaaS platform that supports multiple subscription tiers and handles recurring billing.
+## **Simple Billing App for a SaaS Platform**
 
 ## **Schema Design:**
 
@@ -53,14 +45,6 @@ Your task is to design and implement a billing app for a SaaS platform that supp
 - `payment_method`: Method of payment (e.g., credit card, PayPal, bank transfer). Important for processing and reconciliation.
 - `status`: Status of the payment (e.g., successful, failed, pending). Helps in managing payment processing and troubleshooting.
 
-## **Core Technologies Powering Our SaaS Platform**
-
-**Backend:** Node Js
-
-**Database:** PostgreSQL
-
-**Framework:** Nest Js
-
 ## **Step-by-Step Guide to Setting Up Your SaaS Billing Platform**
 
 ### Step # 1 : Installing Docker and Docker Compose:
@@ -73,7 +57,7 @@ This step involves cloning your SaaS billing application from its GitHub reposit
 
 [https://github.com/tahakhan-dev/billing-saas-app.git](https://github.com/tahakhan-dev/billing-saas-app.git)
 
-### Step # 3: Navigate to the Project's Root Directory
+### Step # 3: Navigate to the Project's Root Directory:
 
 After cloning the repository, switch to the project's root folder to begin configuration and setup.
 
@@ -125,164 +109,8 @@ docker-compose  up -d && docker-compose logs -f
 
 ![image.png](src/public/images/markdown/image%201.png)
 
-### Step # 6.1: Implemented APP E2E Testing
-
-End-to-end (E2E) testing has been implemented to verify that the entire application works as expected from start to finish, ensuring all components interact correctly and the user experience remains smooth.
-
-![image.png](src/public/images/markdown/image%202.png)
-
-### Step # 7: Access API Documentation:
+### Access API Documentation:
 
 Visit `http://localhost:3000/api_docs` to view the API documentation for the SaaS billing application.
 
-![image.png](src/public/images/markdown/image%203.png)
-
-# Exploring Core Features and Use Cases
-
-This section delves into the primary functionalities and practical applications of the system.
-
-## **Subscription Management:**
-
-- **Create and manage subscription plans with different pricing and billing cycles.**
-
 ![image.png](src/public/images/markdown/image%204.png)
-
-- **Assign subscription plans to customers and manage their subscription status**
-  **Steps:**
-
-1. Retrieve a list of all customers.
-2. Choose a customer ID that you wish to manage.
-3. Assign a subscription plan to the selected customer using this API endpoint: `/api/customer/{id}/assign-subscription/{subscriptionPlanId}`.
-
-![image.png](src/public/images/markdown/image%205.png)
-
-![image.png](src/public/images/markdown/image%206.png)
-
-## **Billing Engine:**
-
-- **Automatically generate invoices at the end of each billing cycle based on the
-  customer’s subscription plan**
-
-**Steps :**
-
-1. Update the `subscription_end_date` to today's date to trigger generation at the end of each billing cycle.
-
-![image.png](src/public/images/markdown/image%207.png)
-
-1. Following the update, a cron job will execute at midnight to generate the customer's invoice.
-
-![image.png](src/public/images/markdown/image%208.png)
-
-- **Handle prorated billing for mid-cycle upgrades or downgrades.**
-
-Utilize this API to adjust billing for mid-cycle subscription upgrades or downgrades.
-
-![image.png](src/public/images/markdown/image%209.png)
-
-## **Payment Processing:**
-
-- Record payments made by customers and update invoice status accordingly
-
-![image.png](src/public/images/markdown/image%2010.png)
-
-- As you can observe, I have made the payment for my pending invoice.
-- A new payment will be recorded against this invoice.
-- The invoice status will be updated to 'paid,' and the payment date will be recorded at the time of payment.
-- The subscription end date will be extended from today to next month based on the plan selected.
-
-![image.png](src/public/images/markdown/image%2011.png)
-
-![image.png](src/public/images/markdown/image%2012.png)
-
-![image.png](src/public/images/markdown/image%2013.png)
-
-- **Handle failed payments and implement retry logic.**
-
-Utilize this API endpoint `/api/payment/{id}/fail` to manage failed payments and initiate retries.
-
-![image.png](src/public/images/markdown/image%2014.png)
-
-## **Notifications:**
-
-- **Send email notifications to customers when an invoice is generated, when a payment is successful, or when a payment fails**
-
-I have implemented email notifications that are automatically sent to the customer's preferred address whenever a payment is processed or fails. Similarly, when an invoice is generated, an event triggers an email notification to inform the customer about the new invoice.
-
-![image.png](src/public/images/markdown/image%2015.png)
-
-![image.png](src/public/images/markdown/image%2016.png)
-
-## **InvoiceGenerationFunction(OptionalButPlus):**
-
-The deadline you gave me was reasonable, but I didn't get a chance to work on it for five days because I had office work and other deadlines to meet. I only had time to work on it over the weekend, which is why I couldn't implement the AWS serverless functionality. If I had two more days, I would definitely complete it.
-
-# The following design patterns are used in this application:
-
-### 1. **Repository Pattern**
-
-- **Where it's used**: The repository pattern is used in the service layer to encapsulate the logic for interacting with the database. In app, repositories like `CustomerRepository`, `InvoiceRepository`, and `SubscriptionPlanRepository` are used to abstract data persistence from the business logic.
-- **How it works**: Instead of writing database queries in the service layer, the repository provides an interface to perform CRUD operations. This pattern improves separation of concerns by isolating the database layer from the application logic.
-
-**Example**:
-
-```jsx
-const customer = await this.customerRepository.findOne({
-  where: { id: customerId },
-});
-```
-
-### 2. **Service Layer Pattern**
-
-- **Where it's used**: The **service layer** pattern is seen in your `CustomerService`, `InvoiceService`, `SubscriptionService`, and `PaymentService`. It provides a level of abstraction over business logic, keeping controllers thin and focused on handling HTTP requests.
-- **How it works**: The service layer contains business rules and logic. For instance, in `upgradeOrDowngradeSubscription()`, you calculate prorated costs, create invoices, and update subscription details. The service interacts with repositories and coordinates between them.
-- **Example**:
-  ```tsx
-  const updatedCustomer = await this.customerService.update(
-    customerId,
-    updateCustomerDto,
-  );
-  ```
-
-### 3. **Dependency Injection (DI) Pattern**
-
-- **Where it's used**: This pattern is inherent to NestJS and used throughout the application. Each class that depends on another class (e.g., services, repositories) is injected via the constructor. This decouples components from each other and makes the system more modular and testable.
-- **How it works**: Services and repositories are passed into constructors, and NestJS handles their lifecycle. For example, the `CustomerService` depends on the `CustomerRepository` and `SubscriptionPlanRepository`, but it does not need to instantiate these dependencies.
-
-**Example**:
-
-```tsx
-constructor(
-  @InjectRepository(CustomerEntity) private readonly customerRepository: Repository<CustomerEntity>,
-) {}
-```
-
-### 4. **Event-Driven Pattern (Asynchronous Messaging)**
-
-- **Where it's used**: I use event-driven notifications, which would apply the event-driven pattern. For example, when an invoice is created, an event like `InvoiceCreatedEvent` could be emitted, and the notification service listens for that event to send an email notification.
-- **How it works**: Events are published when something significant happens (e.g., invoice generation or failed payment). Other services (e.g., notification) subscribe to these events and handle them asynchronously.
-
-**Example**:
-
-```tsx
-this.eventEmitter.emit('invoice.created', { invoiceId: newInvoice.id });
-```
-
-### Summary of Patterns I am Using:
-
-1. **Repository Pattern**: Used for data access and separation of business logic from the persistence layer.
-2. **Service Layer Pattern**: Handles the core business logic and orchestrates between the controller and repository.
-3. **Dependency Injection**: Used throughout the application, as it's inherent in NestJS.
-4. **Event-Driven/Observer Pattern**: Used for sending notifications or triggering actions asynchronously after certain events (like invoice generation or payment success).
-
-Each of these design patterns is being used to make application more modular, scalable, and maintainable.
-
-# **Deliverables:**
-
-1. I have provided you with a GitHub repository link to clone the project.
-
-```jsx
-https://github.com/tahakhan-dev/billing-saas-app.git
-```
-
-2. This is a brief documentation to help you set up and configure the project. I've provided all the necessary steps for the setup.
-3. You can access the basic API documentation, which is built using Swagger. [http://localhost:3000/api_docs](http://localhost:3000/api_docs)

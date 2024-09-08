@@ -1,0 +1,748 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Salla Assesment</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 237, 214, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 237, 214, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(249, 228, 188, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="9e7063e2-716d-4679-af79-e0d42e43a916" class="page sans"><header><h1 class="page-title">Salla Assesment</h1><p class="page-description"></p></header><div class="page-body"><h2 id="db381504-4c3f-4702-85d5-50e0de5fd572" class=""><strong>Task 1: Case Study: Build a Simple Billing App for a SaaS Platform</strong></h2><h3 id="ea999a07-6f68-4bf0-b759-dce79ac6db7f" class="">Note: </h3><p id="17e75549-4faf-4e17-94f7-793c22dce9e6" class=""><mark class="highlight-orange">I had planned to build the SaaS billing app architecture using microservices with an event-driven approach, leveraging gRPC and Kafka. However, due to some office deadlines, I ended up going with a monolithic architecture instead.</mark></p><h3 id="7fcdf40b-c060-4224-80f2-305850cc000f" class=""><strong>Problem Statement:</strong></h3><p id="a64f457b-f587-4758-908f-86d2d7b4ebc1" class=""><em><strong>Your task is to design and implement a billing app for a SaaS platform that supports multiple subscription tiers and handles recurring billing.</strong></em></p><h2 id="7b8c72b8-6041-466b-93d4-1bf4a92891aa" class=""><strong>Schema Design:</strong></h2><h3 id="bc0d5d63-8c20-4242-a5a3-91d2fec3c4fb" class="">1. Customer Table</h3><ul id="b30eb83e-a818-419f-88f1-d24e83e9ea93" class="bulleted-list"><li style="list-style-type:disc"><code>id</code>: Primary Key, unique identifier for each customer. This is essential for uniquely identifying customer records across the database.</li></ul><ul id="f00b4b24-a9bd-43c8-8aa4-bb943725d807" class="bulleted-list"><li style="list-style-type:disc"><code>name</code>: Name of the customer. This is important for personalization and communication purposes.</li></ul><ul id="02c62c0b-70d5-4591-9695-b9b32693ed65" class="bulleted-list"><li style="list-style-type:disc"><code>email</code>: Customer&#x27;s email address. This is critical for communication, login identification, and password resets.</li></ul><ul id="a9fdcb4e-6d84-48dd-bd53-0ded4afa14cd" class="bulleted-list"><li style="list-style-type:disc"><code>created_at</code>: Timestamp of when the customer record was created. This helps in tracking when the customer joined the service.</li></ul><ul id="7a6727d6-9b37-4196-b9c3-9506e70a9d9f" class="bulleted-list"><li style="list-style-type:disc"><code>updated_at</code>: Timestamp of the last update made to the customer&#x27;s record. Useful for auditing changes.</li></ul><ul id="a14db15c-bbf5-4598-91f2-7eae3e628b62" class="bulleted-list"><li style="list-style-type:disc"><code>subscriptionPlanId</code>: Foreign key linked to the SubscriptionPlan table. It determines which plan the customer is currently subscribed to.</li></ul><ul id="c3fc2302-f96c-4a6b-a470-395560f7e7ba" class="bulleted-list"><li style="list-style-type:disc"><code>subscription_status</code>: Status of the customer&#x27;s subscription (e.g., active, canceled, pending). Useful for managing access to services and billing.</li></ul><ul id="84955b9b-78cb-47a5-94c7-2138c5e359b0" class="bulleted-list"><li style="list-style-type:disc"><code>subscription_start_date</code>: This field represents the date when the customer’s subscription begins.</li></ul><ul id="371e99ca-95e1-446b-9c20-248497749d94" class="bulleted-list"><li style="list-style-type:disc"><code>subscription_end_date</code>: This field indicates the date when the customer’s current subscription period will end</li></ul><ul id="572ee55e-34e4-4c89-928e-1ce0c9297ab6" class="bulleted-list"><li style="list-style-type:disc"><code>last_payment_date</code>: Date of the last payment. This helps in determining billing cycles and delinquency.</li></ul><h3 id="a9bbd5f9-2472-4a62-abdc-1573c7549e88" class="">2. SubscriptionPlan Table</h3><ul id="1cf81062-9794-451d-aa30-f35ff967a2ed" class="bulleted-list"><li style="list-style-type:disc"><code>id</code>: Primary Key, unique identifier for each subscription plan.</li></ul><ul id="bcf0eaff-e6eb-406a-a019-0f64a076cd30" class="bulleted-list"><li style="list-style-type:disc"><code>name</code>: Descriptive name of the plan (e.g., Basic, Pro, Enterprise). Helps customers understand the tier of service.</li></ul><ul id="721c2ac5-9434-4de7-9f01-10b9cbc4c28e" class="bulleted-list"><li style="list-style-type:disc"><code>price</code>: Monthly price of the subscription plan. Necessary for billing purposes.</li></ul><ul id="e4f06673-537d-418f-abfd-4bd6da0103f9" class="bulleted-list"><li style="list-style-type:disc"><code>duration</code>: Duration of the subscription plan (typically in months). Useful for determining when the subscription renews or expires.</li></ul><ul id="067c7ac0-5e4f-4264-92bb-058e9b9648a3" class="bulleted-list"><li style="list-style-type:disc"><code>billing_cycle</code>: This field defines how often the customer is billed for the subscription plan. This is crucial for setting up automated billing, invoice generation, and subscription management</li></ul><ul id="9f278ad0-f95c-4551-87d6-b1126da8f017" class="bulleted-list"><li style="list-style-type:disc"><code>status</code>: Status of the plan (active/inactive). Helps manage availability of the plan for new or upgrading customers.</li></ul><ul id="95eafe70-a79b-4e45-8590-044719b59c8a" class="bulleted-list"><li style="list-style-type:disc"><code>features</code>: Description of features provided in the plan. Useful for sales and customer support to explain plan capabilities.</li></ul><h3 id="684b8bc6-3063-4c83-af39-bd4df4f40531" class="">3. Invoice Table</h3><ul id="2d9c6ce7-4a99-486c-aff0-95b422d80b52" class="bulleted-list"><li style="list-style-type:disc"><code>id</code>: Primary Key, unique identifier for each invoice.</li></ul><ul id="40a33abd-4225-441a-b80d-8c9d29f47b29" class="bulleted-list"><li style="list-style-type:disc"><code>customerId</code>: Foreign key linked to the Customer table. Identifies the customer to whom the invoice is issued.</li></ul><ul id="df506b14-2edb-40ec-a9fd-ddf7d4cf7514" class="bulleted-list"><li style="list-style-type:disc"><code>subscriptionPlanId</code>: Foreign key linked to the SubscriptionPlan table. Details the plan for which the invoice is issued.</li></ul><ul id="0727c69e-826f-45d8-8aa8-d0580434e397" class="bulleted-list"><li style="list-style-type:disc"><code>amount</code>: Total amount charged on the invoice. Necessary for financial records and customer billing.</li></ul><ul id="bb4acc1c-23cd-4b21-81eb-101a9604a633" class="bulleted-list"><li style="list-style-type:disc"><code>issue_date</code>: Date when the invoice is issued.</li></ul><ul id="020e08a8-83e9-4d71-9972-5e9b1f42764f" class="bulleted-list"><li style="list-style-type:disc"><code>due_date</code>: Date by which the payment should be made. Important for reminding customers and managing collections.</li></ul><ul id="e7aaf42c-415f-4906-b208-08e67026c127" class="bulleted-list"><li style="list-style-type:disc"><code>payment_date</code>: Date when the payment was received. Useful for reconciling accounts and managing cash flow.</li></ul><ul id="55a1ce49-0b31-49f7-995c-49fce246686a" class="bulleted-list"><li style="list-style-type:disc"><code>status</code>: Status of the invoice (e.g., paid, unpaid, overdue). Key for tracking the payment lifecycle.</li></ul><h3 id="01d8c795-31da-47c2-88e9-b806fff5a5f1" class="">4. Payment Table</h3><ul id="b27d2897-2078-47e2-a4ac-6c78b0a99f3a" class="bulleted-list"><li style="list-style-type:disc"><code>id</code>: Primary Key, unique identifier for each payment.</li></ul><ul id="3201d697-3a59-4e5d-a657-cc7310ca5ecb" class="bulleted-list"><li style="list-style-type:disc"><code>invoiceId</code>: Foreign key linked to the Invoice table. Ensures that the payment is correctly associated with an invoice.</li></ul><ul id="8766a19e-1c62-4222-8110-5bd8d5e33516" class="bulleted-list"><li style="list-style-type:disc"><code>amount</code>: Amount paid. This should match the invoice amount or part of it if the payment is partial.</li></ul><ul id="76a26dac-bd96-4e2e-aac1-0d3598567543" class="bulleted-list"><li style="list-style-type:disc"><code>payment_date</code>: Timestamp of when the payment was made. Critical for financial records.</li></ul><ul id="fe35f1ea-89b5-4baa-ab4c-91dc6bb1cea2" class="bulleted-list"><li style="list-style-type:disc"><code>payment_method</code>: Method of payment (e.g., credit card, PayPal, bank transfer). Important for processing and reconciliation.</li></ul><ul id="8cda6dfb-1ef0-4708-80ca-d2ff8ebdb774" class="bulleted-list"><li style="list-style-type:disc"><code>status</code>: Status of the payment (e.g., successful, failed, pending). Helps in managing payment processing and troubleshooting.</li></ul><h2 id="b0993329-feee-4e51-90f9-87f0a84d5532" class=""><strong>Core Technologies Powering Our SaaS Platform</strong></h2><p id="f460c35f-f6f5-4b8a-a521-ecdb42709c20" class=""><em><strong>Backend:</strong></em> Node Js</p><p id="c35f3597-2781-48ab-9829-7888e1cde8ad" class=""><em><strong>Database:</strong></em> PostgreSQL</p><p id="6fe51e8f-19e6-4254-ba99-942c9946ee16" class=""><em><strong>Framework:</strong></em> Nest Js</p><h2 id="db700fa4-78cd-42fe-9d6c-3d72aea277c4" class=""><strong>Step-by-Step Guide to Setting Up Your SaaS Billing Platform</strong></h2><h3 id="65347995-1034-4193-b7c1-14cd17fd7a35" class=""><span style="border-bottom:0.05em solid">Step # 1 : Installing Docker and Docker Compose:</span></h3><p id="f520c5fe-766d-4946-b10e-c4286e9b51da" class="">Start by downloading Docker, which includes Docker Compose as part of its desktop installation for Windows and Mac. For Linux users, Docker Compose must be installed separately. This setup will enable you to manage containerized applications smoothly. Visit the official Docker website to download the appropriate installer for your operating system and follow the provided installation instructions to set up both Docker and Docker Compose.</p><h3 id="5eed8c73-68fc-4e80-9d59-26160628d86b" class=""><span style="border-bottom:0.05em solid">Step # 2 : Clone the Billing SaaS Application Repository:</span></h3><p id="b240500c-83e5-45b6-b150-519bca93e517" class="">This step involves cloning your SaaS billing application from its GitHub repository.</p><figure id="e5b7d75e-3518-41ca-b220-d7ef518165c5"><div class="source">https://github.com/tahakhan-dev/billing-saas-app.git</div></figure><h3 id="ca7c4c99-b16b-4c78-b30a-bada5a4adf74" class=""><strong><span style="border-bottom:0.05em solid">Step # 3: Navigate to the Project&#x27;s Root Directory</span></strong></h3><p id="932baec2-40a3-4381-a31c-5178654838b2" class="">After cloning the repository, switch to the project&#x27;s root folder to begin configuration and setup.</p><figure id="aff0b923-4aee-4282-b28b-99c6fa7444f5" class="image"><a href="Salla%20Assesment%20Images/image.png"><img style="width:282px" src="Salla%20Assesment%20Images/image.png"/></a></figure><h3 id="67a9d86b-495e-4f58-b5c2-bcbe96d7ae20" class=""><span style="border-bottom:0.05em solid">Step # 4: Set Environment Variables for Docker Compose</span></h3><p id="552ead1b-04b4-45a5-b59f-786611cb8e48" class="">Configure the required environment variables to ensure the Docker Compose setup runs correctly.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="17b02d7f-fb48-4229-971f-76efdcc55581" class="code"><code class="language-JavaScript">PORT=3000
+CLUSTER_ENV=dev
+
+#----- Database Credential------------------
+DB_HOST=host.docker.internal
+DB_PORT=5433
+DB_USER=tahakhan
+DB_PASSWORD=
+DB_DATABASE=postgres
+DB_TYPE=postgres
+ENABLE_AUTOMATIC_CREATION=true
+AUTO_LOAD_ENTITIES=true
+
+JWT_SECRET=6502f2502a8b22bbbd724cd4efedcbe7fbdf47410cbb385e69c6494bcc107ea7
+
+
+# ----------- EMAIL CREDENTIAL --------------------
+
+SMTP_HOST=smtp.example.com
+EMAIL_USER=user
+EMAIL_PASSWORD=your-email-password
+SENDER_ADDRESS=send-email-address</code></pre><h3 id="29c19e60-255e-4fcf-8e17-6367f312f33e" class=""><span style="border-bottom:0.05em solid">Step # 5: Launch PostgreSQL with Docker Compose</span></h3><p id="cd2b833c-b6c1-4e98-bc74-abb672697b02" class="">This docker-compose.pg.yml file will set up a PostgreSQL container and automatically create the necessary databases. To automate this process, I&#x27;ve implemented a shell script.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="089c890d-6008-4589-88de-a98a649484d9" class="code"><code class="language-JavaScript" style="white-space:pre-wrap;word-break:break-all">docker-compose -f docker-compose.pg.yml up -d</code></pre><h3 id="195de410-9ea9-4a33-b081-7f8439366c67" class=""><span style="border-bottom:0.05em solid">Step # 6: Execute Docker Compose to Start the SaaS Billing Application</span></h3><p id="02b02fe3-398e-4da1-9854-019f651e4cb3" class="">Use Docker Compose to launch your SaaS billing application, initializing all necessary services defined in the <code>docker-compose.yml</code> file.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="49a8df5b-9b04-446c-babd-65840adf158d" class="code"><code class="language-JavaScript">docker-compose  up -d &amp;&amp; docker-compose logs -f</code></pre><figure id="f4d3b9e7-0516-4988-8be0-6a65b2473759" class="image"><a href="Salla%20Assesment%20Images/image%201.png"><img style="width:768px" src="Salla%20Assesment%20Images/image%201.png"/></a></figure><h3 id="2b433b76-79a3-44ea-9faf-91277a6d58cf" class=""><span style="border-bottom:0.05em solid">Step # 7: Access API Documentation:</span></h3><p id="abe9fb5d-0261-4503-9b63-de30ba841e4a" class="">Visit <code>http://localhost:3000/api_docs</code> to view the API documentation for the SaaS billing application.</p><figure id="db210ecc-d9ba-4b10-9443-46d4bfb4cdb6" class="image"><a href="Salla%20Assesment%20Images/image%202.png"><img style="width:2850px" src="Salla%20Assesment%20Images/image%202.png"/></a></figure><p id="da7cfba3-b63a-4ac2-a743-3bc9c75f4523" class="">
+</p><h1 id="3bfd7c72-05d1-4c1e-9fd2-17aab9d618f3" class=""><strong>Test Implementation of Controller, Service, and E2E Testing</strong></h1><h3 id="2a48ee71-3263-4d24-9f25-8ae3d87f4272" class=""><strong><span style="border-bottom:0.05em solid">Implemented Test Cases for Every Controller and Service of Each Module:</span></strong></h3><p id="ecd8ba4f-813e-4023-a2d8-dffcc06a2b5b" class="">In this step, we have successfully implemented comprehensive test cases for all controllers and services in each module of the application. The purpose of these tests is to ensure that the business logic of the application functions as expected, that proper data flows between components, and that edge cases and potential errors are handled correctly.</p><ol type="1" id="68a1dd98-04b0-4d8b-bbd0-cb38d4703c9b" class="numbered-list" start="1"><li><strong>Controller Test Cases:</strong><ul id="495fd4bd-d52a-4dc1-9572-82c1ccf174f4" class="bulleted-list"><li style="list-style-type:disc"><strong>Objective:</strong> Verify that the controllers are correctly handling HTTP requests, routing them to the correct services, and returning appropriate responses.</li></ul><ul id="d1e13af0-e856-4f57-a5de-72c5ddcedbf6" class="bulleted-list"><li style="list-style-type:disc"><strong>Scope:</strong><ul id="5a70e33e-ecb5-4612-958f-772f5daef82a" class="bulleted-list"><li style="list-style-type:circle">CRUD operations for entities like <code>Customer</code>, <code>Invoice</code>, <code>Payment</code>, <code>Subscription</code>, etc.</li></ul><ul id="4be072c8-2669-4f80-af46-70ee5622bfaa" class="bulleted-list"><li style="list-style-type:circle">Status codes validation (<code>201</code>, <code>404</code>, <code>409</code>, etc.).</li></ul><ul id="10661a50-7679-4802-b941-ff36f9bbbabe" class="bulleted-list"><li style="list-style-type:circle">Proper handling of path parameters, body data, and query parameters.</li></ul><ul id="b7325f83-c9e6-4ed2-8870-ee77547ecd24" class="bulleted-list"><li style="list-style-type:circle">Error handling and exceptions (e.g., <code>NotFoundException</code>).</li></ul></li></ul></li></ol><ol type="1" id="84e81412-ac0b-4768-8242-c21582808b4f" class="numbered-list" start="2"><li><strong>Service Test Cases:</strong><ul id="68a7dd24-662f-4f54-9c28-8cdbcfce9d56" class="bulleted-list"><li style="list-style-type:disc"><strong>Objective:</strong> Ensure that all business logic in services is functioning correctly, and each service method performs its task reliably.</li></ul><ul id="11cf84f4-e782-4bd0-9961-8f0ea30ae151" class="bulleted-list"><li style="list-style-type:disc"><strong>Scope:</strong><ul id="7b80f7ce-02e2-45bf-a08f-56f7b7239b01" class="bulleted-list"><li style="list-style-type:circle">Core functionalities such as creating, updating, retrieving, and deleting data.</li></ul><ul id="329dac44-798e-4673-b5cc-af0656239d9a" class="bulleted-list"><li style="list-style-type:circle">Special features like handling payment retries, prorated billing, subscription upgrades, and failed payment retries.</li></ul><ul id="04020bb4-ffc3-4358-9562-e5737c3b0005" class="bulleted-list"><li style="list-style-type:circle">Event-based actions (e.g., sending notifications on invoice creation or payment success).</li></ul><ul id="bd9f0328-a720-4d5a-be4a-e4dd40aec1fe" class="bulleted-list"><li style="list-style-type:circle">Data validation, relationships between entities, and transactional integrity.</li></ul></li></ul></li></ol><ol type="1" id="100a2df4-5e8e-4792-b0b5-f51da7fb984c" class="numbered-list" start="3"><li><strong>Methodology:</strong><ul id="29342675-0b25-4f29-a969-952ddfc1def2" class="bulleted-list"><li style="list-style-type:disc">Each service and controller method is tested to cover both happy-path and edge-case scenarios.</li></ul><ul id="ef64266c-7d13-415c-8227-842e44026b10" class="bulleted-list"><li style="list-style-type:disc">Mocks are used for external dependencies such as repositories, external APIs, and event emitters.</li></ul><ul id="4a9f629d-ff61-417e-b35e-d05c0ec10d48" class="bulleted-list"><li style="list-style-type:disc">Ensure proper state changes are happening in the database (e.g., after a successful payment, the status of invoices and payments is updated correctly).</li></ul></li></ol><ol type="1" id="2bd4c7b6-fb4d-4734-90cf-ccd03b9a1090" class="numbered-list" start="4"><li><strong>Outcome:</strong><ul id="0fd68138-e470-4867-b358-a13f5c4f7ffd" class="bulleted-list"><li style="list-style-type:disc">Test cases ensure that the application handles both valid and invalid inputs gracefully.</li></ul><ul id="3723b18c-1517-4a49-8c0a-768bafce1802" class="bulleted-list"><li style="list-style-type:disc">The structure of the tests improves confidence that future changes will not break existing functionality.</li></ul><ul id="b524b965-8779-4c33-9211-c3eb273555d5" class="bulleted-list"><li style="list-style-type:disc">Developers can now easily extend or modify functionality, as existing test coverage will provide feedback on the impacts of changes.</li></ul></li></ol><p id="11fff7a3-0c34-4646-86e8-60e0db6b32a5" class="">This step enhances the robustness of the application by ensuring that every module, controller, and service has been rigorously tested, reducing the risk of bugs in production and ensuring that core functionalities work as expected.</p><figure id="ffa73f69-cf80-41ee-b35f-7b77a403aae6" class="image"><a href="Salla%20Assesment%20Images/image%203.png"><img style="width:708px" src="Salla%20Assesment%20Images/image%203.png"/></a></figure><h3 id="ce9a62cb-d24a-4cbc-96be-bb4b450875a2" class=""><span style="border-bottom:0.05em solid">Implemented APP E2E Testing:</span></h3><p id="0a501ddc-c8c2-494b-8d05-07cfd2f2f781" class="">End-to-end (E2E) testing has been implemented to verify that the entire application works as expected from start to finish, ensuring all components interact correctly and the user experience remains smooth.</p><figure id="2fd9aad3-0006-4da6-8ab6-ac9f8480dae8" class="image"><a href="Salla%20Assesment%20Images/image%204.png"><img style="width:548px" src="Salla%20Assesment%20Images/image%204.png"/></a></figure><h1 id="c510add0-a90c-4bf8-8901-0bb5e0f6996b" class="">Exploring Core Features and Use Cases</h1><p id="cafac745-d275-4e45-98fb-4874ff24c2cd" class="">This section delves into the primary functionalities and practical applications of the system.</p><h2 id="25ba2c9e-bfff-4956-8cfe-a67c06b07de0" class=""><strong><span style="border-bottom:0.05em solid">Prerequisites for Using APIs</span></strong></h2><ol type="1" id="23192392-6505-4169-8d3a-df9f5688d227" class="numbered-list" start="1"><li>I have implemented JWT authentication, so a JWT token is required to access all routes except the customer route.</li></ol><ol type="1" id="aa3a3f53-5c05-421c-9930-0e570144d309" class="numbered-list" start="2"><li>Obtain the access token by creating a new customer at the following URL: <code>http://localhost:3000/api/customer</code></li></ol><figure id="5d1e0318-6868-4023-84c7-bfc3997262d0" class="image"><a href="Salla%20Assesment%20Images/image%205.png"><img src="Salla%20Assesment%20Images/image%205.png"/></a></figure><ol type="1" id="77a4258c-8986-42d4-8203-807c50d292d2" class="numbered-list" start="3"><li>Click the &quot;Authorize&quot; button, paste the JWT token, and click &quot;Authorize&quot; again. This will automatically include the JWT token in your requests, so you won&#x27;t need to add it manually when accessing any routes.</li></ol><figure id="461e5f03-0e65-4fbf-9a55-d96145735d42" class="image"><a href="Salla%20Assesment%20Images/image%206.png"><img style="width:2840px" src="Salla%20Assesment%20Images/image%206.png"/></a></figure><h2 id="8089df27-07f3-4f3d-9088-0dac0b3a79f5" class=""><strong><span style="border-bottom:0.05em solid">Subscription Management:</span></strong></h2><ul id="83f028b2-4c28-4e86-beee-1aadd42df492" class="bulleted-list"><li style="list-style-type:disc"><strong> Create and manage subscription plans with different pricing and billing cycles.</strong><br/><br/></li></ul><figure id="a7d14ae9-9968-4d45-b5b9-aaf71715ff03" class="image"><a href="Salla%20Assesment%20Images/image%207.png"><img style="width:768px" src="Salla%20Assesment%20Images/image%207.png"/></a></figure><ul id="175d0edf-d2e9-4431-9999-43b84dc3e980" class="bulleted-list"><li style="list-style-type:disc"><strong>Assign subscription plans to customers and manage their subscription status</strong><br/><br/><strong>Steps:</strong></li></ul><ol type="1" id="d2377143-7b6c-4284-bfc6-073da1ff331a" class="numbered-list" start="1"><li>Retrieve a list of all customers.</li></ol><ol type="1" id="90176ed5-802c-49ba-a7bf-4e1f01b977cd" class="numbered-list" start="2"><li>Choose a customer ID that you wish to manage.</li></ol><ol type="1" id="f6a06edd-d05e-453b-9248-14243f44471b" class="numbered-list" start="3"><li>Assign a subscription plan to the selected customer using this API endpoint: <code>/api/customer/{id}/assign-subscription/{subscriptionPlanId}</code>.</li></ol><figure id="33b38ab9-da2d-428b-9708-8f547127a660" class="image"><a href="Salla%20Assesment%20Images/image%208.png"><img style="width:336px" src="Salla%20Assesment%20Images/image%208.png"/></a></figure><figure id="45123af6-5035-4109-853d-3a2e0b4084b8" class="image"><a href="Salla%20Assesment%20Images/image%209.png"><img style="width:528px" src="Salla%20Assesment%20Images/image%209.png"/></a></figure><h2 id="0b9d3662-9f19-4cc7-aae1-c0859eef5348" class=""><strong><span style="border-bottom:0.05em solid">Billing Engine:</span></strong></h2><ul id="4d14e598-d453-4e84-8709-8025dfe246ab" class="bulleted-list"><li style="list-style-type:disc"><strong> Automatically generate invoices at the end of each billing cycle based on the<br/>customer’s subscription plan<br/></strong></li></ul><h3 id="a683d386-cc6d-4328-ba10-0cfb58a8e3e4" class=""><strong><span style="border-bottom:0.05em solid">Steps :</span></strong></h3><ol type="1" id="61a61703-2e63-4618-a70a-12d80569fb36" class="numbered-list" start="1"><li>Update the <code>subscription_end_date</code> to today&#x27;s date to trigger generation at the end of each billing cycle.<br/><br/></li></ol><figure id="7f342062-2a6b-454d-8c65-04381a8a817e" class="image"><a href="Salla%20Assesment%20Images/image%2010.png"><img style="width:432px" src="Salla%20Assesment%20Images/image%2010.png"/></a></figure><ol type="1" id="4317bd64-eae0-46c8-851d-caf32b4e678d" class="numbered-list" start="2"><li>Following the update, a cron job will execute at midnight to generate the customer&#x27;s invoice.</li></ol><figure id="46f9054f-5f03-427e-8f12-87d60be2af70" class="image"><a href="Salla%20Assesment%20Images/image%2011.png"><img style="width:864px" src="Salla%20Assesment%20Images/image%2011.png"/></a></figure><ul id="32afed05-4c11-47df-9076-9d78d0e11362" class="bulleted-list"><li style="list-style-type:disc"><strong>Handle prorated billing for mid-cycle upgrades or downgrades.</strong></li></ul><p id="ce69908e-ffee-4b53-9651-03ee878ba692" class="">Utilize this API to adjust billing for mid-cycle subscription upgrades or downgrades.</p><figure id="bf612644-17e4-4962-ac3e-2b585badaa8c" class="image"><a href="Salla%20Assesment%20Images/image%2012.png"><img style="width:708px" src="Salla%20Assesment%20Images/image%2012.png"/></a></figure><h2 id="0a847d1d-035d-49ea-971b-8412aa250f0a" class=""><br/><br/><strong><span style="border-bottom:0.05em solid">Payment Processing:</span></strong></h2><ul id="bc74453d-3e78-4c0c-b9db-01b86bf4a7f3" class="bulleted-list"><li style="list-style-type:disc">Record payments made by customers and update invoice status accordingly<br/>	<br/><br/></li></ul><figure id="4d9aa3e5-7786-45f3-86cf-94a14e6a833a" class="image"><a href="Salla%20Assesment%20Images/image%2013.png"><img style="width:720px" src="Salla%20Assesment%20Images/image%2013.png"/></a></figure><ul id="45b46c2c-1ded-44eb-96e7-afe2b75cc64a" class="bulleted-list"><li style="list-style-type:disc">As you can observe, I have made the payment for my pending invoice.</li></ul><ul id="ac4f1f58-fde1-442a-a5dd-b6a10bf94ee2" class="bulleted-list"><li style="list-style-type:disc">A new payment will be recorded against this invoice.</li></ul><ul id="c62b0ff4-53d3-4390-a893-ade97a0eb5de" class="bulleted-list"><li style="list-style-type:disc">The invoice status will be updated to &#x27;paid,&#x27; and the payment date will be recorded at the time of payment.</li></ul><ul id="0c7012cf-24a7-456f-ae5a-b908fe23f90c" class="bulleted-list"><li style="list-style-type:disc">The subscription end date will be extended from today to next month based on the plan selected.</li></ul><figure id="e7009174-ab8e-42fe-9719-d7bc2b3035cf" class="image"><a href="Salla%20Assesment%20Images/image%2014.png"><img style="width:708px" src="Salla%20Assesment%20Images/image%2014.png"/></a></figure><figure id="40d60a4b-23aa-4675-a2fc-90d1969cc84a" class="image"><a href="Salla%20Assesment%20Images/image%2015.png"><img style="width:816px" src="Salla%20Assesment%20Images/image%2015.png"/></a></figure><figure id="7597c63e-885c-48ea-ad94-b785080ce9f3" class="image"><a href="Salla%20Assesment%20Images/image%2016.png"><img style="width:816px" src="Salla%20Assesment%20Images/image%2016.png"/></a></figure><ul id="43855888-2d95-4af5-baf0-3d0fa6eaaaa5" class="bulleted-list"><li style="list-style-type:disc"><strong>Handle failed payments and implement retry logic.</strong></li></ul><p id="169763b6-6778-436b-aaf3-1907387d04a7" class="">Utilize this API endpoint <code>/api/payment/{id}/fail</code> to manage failed payments and initiate retries.</p><figure id="cfb0a6f4-f506-4a22-869f-f59e5bc874ef" class="image"><a href="Salla%20Assesment%20Images/image%2017.png"><img style="width:432px" src="Salla%20Assesment%20Images/image%2017.png"/></a></figure><h2 id="b2b8909c-7a42-4082-9a03-ff7dcba65602" class=""><strong><span style="border-bottom:0.05em solid">Notifications:</span></strong></h2><ul id="22638f1e-4dd1-42c2-9317-f37221835f72" class="bulleted-list"><li style="list-style-type:disc"><strong>Send email notifications to customers when an invoice is generated, when a payment is successful, or when a payment fails</strong></li></ul><p id="9995a87a-3ef0-4df2-adb6-ef158569e13c" class="">I have implemented email notifications that are automatically sent to the customer&#x27;s preferred address whenever a payment is processed or fails. Similarly, when an invoice is generated, an event triggers an email notification to inform the customer about the new invoice.</p><figure id="82e7de3a-91bc-4c0f-b5e5-2ef48ebc645c" class="image"><a href="Salla%20Assesment%20Images/image%2018.png"><img style="width:480px" src="Salla%20Assesment%20Images/image%2018.png"/></a></figure><figure id="819e39b7-d34c-45b1-93b0-21b2cc8b4f1a" class="image"><a href="Salla%20Assesment%20Images/image%2019.png"><img style="width:672px" src="Salla%20Assesment%20Images/image%2019.png"/></a></figure><p id="f47f29a8-0b80-493b-aabe-a081676722a2" class="">
+</p><h2 id="042e5881-f26c-4688-8f30-c7202103885e" class=""><strong>InvoiceGenerationFunction(OptionalButPlus):</strong></h2><p id="cd0d768f-8972-4a53-b837-b3fca1877709" class="">The deadline you gave me was reasonable, but I didn&#x27;t get a chance to work on it for five days because I had office work and other deadlines to meet. I only had time to work on it over the weekend, which is why I couldn&#x27;t implement the AWS serverless functionality. If I had two more days, I would definitely complete it.</p><h1 id="d992004a-15d0-413d-9a74-d5919fc038e1" class="">The following design patterns are used in this application:</h1><h3 id="3bea8c29-4e97-42b9-9fe9-3d6dbb1df6f5" class=""><strong><span style="border-bottom:0.05em solid">1. Repository Pattern</span></strong></h3><ul id="98c466a9-9d11-4606-9726-41c088b8d79e" class="bulleted-list"><li style="list-style-type:disc"><strong>Where it&#x27;s used</strong>: The repository pattern is used in the service layer to encapsulate the logic for interacting with the database. In  app, repositories like <code>CustomerRepository</code>, <code>InvoiceRepository</code>, and <code>SubscriptionPlanRepository</code> are used to abstract data persistence from the business logic.</li></ul><ul id="551f9903-25e7-4535-98ad-196abf48f80c" class="bulleted-list"><li style="list-style-type:disc"><strong>How it works</strong>: Instead of writing database queries in the service layer, the repository provides an interface to perform CRUD operations. This pattern improves separation of concerns by isolating the database layer from the application logic.</li></ul><p id="db678caa-b79a-435e-a059-c5d98d6dae00" class=""><strong>Example</strong>:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="3d08d156-d125-4705-9d55-29b953e05ce8" class="code"><code class="language-JavaScript" style="white-space:pre-wrap;word-break:break-all">const customer = await this.customerRepository.findOne({ where: { id: customerId } });</code></pre><h3 id="5f8d1329-9e75-4740-a53f-ab94ba5716fb" class=""><span style="border-bottom:0.05em solid">2. </span><strong><span style="border-bottom:0.05em solid">Service Layer Pattern</span></strong></h3><ul id="73411119-b17e-4326-863d-cf70cead673d" class="bulleted-list"><li style="list-style-type:disc"><strong>Where it&#x27;s used</strong>: The <strong>service layer</strong> pattern is seen in your <code>CustomerService</code>, <code>InvoiceService</code>, <code>SubscriptionService</code>, and <code>PaymentService</code>. It provides a level of abstraction over business logic, keeping controllers thin and focused on handling HTTP requests.</li></ul><ul id="021333d6-13cf-40a7-a5a3-0b0002e5fcca" class="bulleted-list"><li style="list-style-type:disc"><strong>How it works</strong>: The service layer contains business rules and logic. For instance, in <code>upgradeOrDowngradeSubscription()</code>, you calculate prorated costs, create invoices, and update subscription details. The service interacts with repositories and coordinates between them.</li></ul><ul id="8e4b698a-99a5-4b4c-9c99-aba2a6543699" class="bulleted-list"><li style="list-style-type:disc"><strong>Example</strong>:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="cc784015-ece8-4aa4-aebb-70963eba4d00" class="code"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">const updatedCustomer = await this.customerService.update(customerId, updateCustomerDto);</code></pre></li></ul><h3 id="689bd6a6-d6b0-4997-91b6-0bcbec77db18" class=""><span style="border-bottom:0.05em solid">3. </span><strong><span style="border-bottom:0.05em solid">Dependency Injection (DI) Pattern</span></strong></h3><ul id="8ea12a64-c298-4f92-8809-11a52119c275" class="bulleted-list"><li style="list-style-type:disc"><strong>Where it&#x27;s used</strong>: This pattern is inherent to NestJS and used throughout the application. Each class that depends on another class (e.g., services, repositories) is injected via the constructor. This decouples components from each other and makes the system more modular and testable.</li></ul><ul id="50ce7fa8-8040-458f-9192-2739218af4e6" class="bulleted-list"><li style="list-style-type:disc"><strong>How it works</strong>: Services and repositories are passed into constructors, and NestJS handles their lifecycle. For example, the <code>CustomerService</code> depends on the <code>CustomerRepository</code> and <code>SubscriptionPlanRepository</code>, but it does not need to instantiate these dependencies.</li></ul><p id="0625d551-4c2e-48f8-b418-ddb7de1e52de" class=""><strong>Example</strong>:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="61d5b2a6-8974-4bf0-92f1-57640794d1f4" class="code"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">constructor(
+  @InjectRepository(CustomerEntity) private readonly customerRepository: Repository&lt;CustomerEntity&gt;,
+) {}</code></pre><h3 id="d4cd1bb5-192b-4dfe-b0c0-eae3b81e90b2" class=""><span style="border-bottom:0.05em solid">4. </span><strong><span style="border-bottom:0.05em solid">Event-Driven Pattern (Asynchronous Messaging)</span></strong></h3><ul id="fa68c317-f985-454b-b485-b8a15b0619f8" class="bulleted-list"><li style="list-style-type:disc"><strong>Where it&#x27;s used</strong>: I use event-driven notifications, which would apply the event-driven pattern. For example, when an invoice is created, an event like <code>InvoiceCreatedEvent</code> could be emitted, and the notification service listens for that event to send an email notification.</li></ul><ul id="047292ed-26b0-4c83-b6fc-5f7b5ee8a35e" class="bulleted-list"><li style="list-style-type:disc"><strong>How it works</strong>: Events are published when something significant happens (e.g., invoice generation or failed payment). Other services (e.g., notification) subscribe to these events and handle them asynchronously.</li></ul><p id="1f01a2c0-a887-4477-9f25-1b3a25e67e11" class=""><strong>Example</strong>:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="8e0a0fe2-c3a6-4264-9007-3b7cb3f68a09" class="code"><code class="language-TypeScript" style="white-space:pre-wrap;word-break:break-all">this.eventEmitter.emit(&#x27;invoice.created&#x27;, { invoiceId: newInvoice.id });</code></pre><h3 id="0bed31a2-aadd-4097-8bd2-0acd215084fc" class=""><span style="border-bottom:0.05em solid">5. Singleton Pattern:</span></h3><ul id="2937ac81-a499-4e83-94e5-33fdd106cd72" class="bulleted-list"><li style="list-style-type:disc"><strong>Where it&#x27;s used</strong>: I use the Singleton pattern to ensure that services like database connections, JWT service, and event emitter are instantiated only once throughout the application. This minimizes resource usage and provides a global access point for these services.</li></ul><ul id="ecc3f2c8-73b2-497d-8800-67acf6ba4a8b" class="bulleted-list"><li style="list-style-type:disc"><strong>How it works</strong>: The Singleton pattern restricts the instantiation of a class to one object. This is achieved by making the constructor private and providing a static method that ensures only one instance is created and reused.</li></ul><h3 id="cfe506a2-f656-41e3-acaf-58c80e785973" class=""><span style="border-bottom:0.05em solid">Summary of Patterns I am Using:</span></h3><ol type="1" id="73fa06ca-eca9-4ac5-86f0-d317f85aa434" class="numbered-list" start="1"><li><strong>Repository Pattern</strong>: Used for data access and separation of business logic from the persistence layer.</li></ol><ol type="1" id="184e453e-a722-42a3-aa8c-9574909159ec" class="numbered-list" start="2"><li><strong>Service Layer Pattern</strong>: Handles the core business logic and orchestrates between the controller and repository.</li></ol><ol type="1" id="6ba85c4d-46c3-4fc7-9aaa-f97b6cd7f1df" class="numbered-list" start="3"><li><strong>Dependency Injection</strong>: Used throughout the application, as it&#x27;s inherent in NestJS.</li></ol><ol type="1" id="4747a734-134d-4f20-ac10-9686474e8af6" class="numbered-list" start="4"><li><strong>Event-Driven/Observer Pattern</strong>: Used for sending notifications or triggering actions asynchronously after certain events (like invoice generation or payment success).</li></ol><p id="3e5e3ae1-de4c-4335-8562-a34e02b374a9" class="">Each of these design patterns is being used to make  application more modular, scalable, and maintainable.</p><h1 id="7384181b-491d-4c3d-9742-3e1c19a3a1e0" class=""><strong>Deliverables:</strong></h1><ol type="1" id="30344546-c532-4b06-bbb2-e92d6033a802" class="numbered-list" start="1"><li>I have provided you with a GitHub repository link to clone the project. </li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="ebaa6d68-f971-41f9-b0e9-7e3e255afc53" class="code"><code class="language-JavaScript">https://github.com/tahakhan-dev/billing-saas-app.git</code></pre><ol type="1" id="e213dc11-c9d0-4c96-8849-5793e4eb57f5" class="numbered-list" start="2"><li>This is a brief documentation to help you set up and configure the project. I&#x27;ve provided all the necessary steps for the setup.</li></ol><ol type="1" id="8e959ee8-734c-418b-9bec-1b016bacba04" class="numbered-list" start="3"><li>You can access the basic API documentation, which is built using Swagger. <mark class="highlight-red"><a href="http://localhost:3000/api_docs">http://localhost:3000/api_docs</a></mark></li></ol><h2 id="71922dee-1020-453b-832a-84a602e9dba9" class=""><strong>Task 2: Code Refactoring</strong></h2><p id="f2208505-ccda-4dbc-808d-47ae7b559783" class=""><strong>Problematic Code:</strong></p><p id="7ff2ef1e-903e-4d0a-bc4d-b7735315a2eb" class=""><strong>JavaScript:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="cd7cc531-2179-4685-9c17-db98395b1890" class="code"><code class="language-JavaScript" style="white-space:pre-wrap;word-break:break-all"> app.get(&#x27;/product/:productId&#x27;, (req, res) =&gt; {
+       db.query(`SELECT * FROM products WHERE id=${req.params.productId}`, (err,
+   result) =&gt; {
+           if (err) throw err;
+           res.send(result);
+       });
+});</code></pre><ol type="1" id="7e27058e-186c-428e-b5f9-43ae8e601c8d" class="numbered-list" start="1"><li><strong>SQL Injection Vulnerability:</strong><ul id="c2768fd4-3674-4c2b-8f8f-6ccfc877ec3d" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Problem:</span></strong> The original code constructs an SQL query by directly embedding the <code>productId</code> from the request URL into the SQL statement. This practice is dangerous because it makes the application vulnerable to SQL injection attacks, where an attacker can manipulate the SQL query by crafting a malicious <code>productId</code></li></ul><ul id="a5265351-54a4-4a9a-a974-b07e102b34f8" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Impact:</span></strong> SQL injection can lead to unauthorized access to or manipulation of the database. An attacker might execute arbitrary SQL commands, potentially causing data breaches, data corruption, or even complete compromise of the database.</li></ul><ul id="18858cd5-c4b6-4582-bd80-6775e3fa9aed" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Solution:</span></strong> Use parameterized queries (also known as prepared statements) to safely pass user input to the SQL query. Instead of directly embedding the <code>productId</code> into the query string, you should use a placeholder (<code>?</code> in MySQL, <code>$1</code> in PostgreSQL, etc.) and pass the user input as a separate parameter.</li></ul><ul id="91e1fe8f-09f7-489e-9a0c-7facbbbed9a5" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Implementation:</span></strong></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="4b5bdeff-5215-41c5-8da0-3c0203a4f6fa" class="code"><code class="language-JavaScript">const query = &#x27;SELECT * FROM products WHERE id = ?&#x27;;
+db.query(query, [req.params.productId], (err, result) =&gt; {
+    // Handle the result or error
+});</code></pre></li></ol><ol type="1" id="9496cc6f-eea0-4865-a446-d38d699290df" class="numbered-list" start="2"><li><strong>Poor Error Handling:</strong><ul id="136bcf53-40e1-4df4-91d7-0801ff5b6ac8" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Problem:</span></strong> The original code uses <code>throw err</code> within the callback function of the database query. While this will stop the code execution if an error occurs, it does not handle the error in a user-friendly manner. It might crash the entire server if not properly caught and handled elsewhere in the application.</li></ul><ul id="64b3386a-50f4-4579-b513-bdf2a53dd521" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Impact:</span></strong> If an error occurs, the server might crash, leading to downtime and a poor user experience. Additionally, the lack of meaningful error messages makes it difficult for users to understand what went wrong and how they might rectify the issue.</li></ul><ul id="fcaf7914-c7e4-4797-94ca-6cb78e6cdccb" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Solution:</span></strong> Instead of throwing the error with <code>throw err</code>, you should handle it gracefully by logging the error and returning an appropriate response to the client. This can be done using <code>console.error()</code> for logging and <code>res.status()</code> for setting the HTTP status code.</li></ul><ul id="ca228c2a-386f-49af-902c-120cfc043bf9" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Implementation:</span></strong></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="0926bc34-e5d8-4df0-b601-bd614dbc3a11" class="code"><code class="language-JavaScript">db.query(query, [req.params.productId], (err, result) =&gt; {
+    if (err) {
+        console.error(&#x27;Database query error:&#x27;, err);
+        return res.status(500).json({ message: &#x27;Internal Server Error&#x27; });
+    }
+    // Handle the result
+});</code></pre></li></ol><ol type="1" id="a2d5ed58-65b9-4bd0-be08-8cc2c00e518c" class="numbered-list" start="3"><li><strong>Missing Proper HTTP Status Codes:</strong><ul id="613faa33-f947-4cea-8c57-7eb7affd24e4" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Problem:</span></strong> The original code does not return appropriate HTTP status codes based on the outcome of the operation. For example, it does not handle scenarios where the requested product is not found in the database.</li></ul><ul id="ac38688a-3bb9-4869-8ae4-936d69fb32d2" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Impact:</span></strong> Not returning the correct HTTP status codes can lead to confusion for the client applications consuming this API. It also violates RESTful API principles, where responses should include status codes that indicate the success or failure of a request.</li></ul><ul id="61e6fbc8-3f62-4387-80c7-00cf6e0c2f14" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Solution:</span></strong> Use <code>res.status()</code> to return the correct HTTP status codes depending on the result of the operation. For example, return <code>404 Not Found</code> if the requested resource does not exist, and return <code>200 OK</code> for successful operations.</li></ul><ul id="0bbb0f1f-ec39-4c3c-8ac2-08295e7e83ed" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Implementation:</span></strong></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="7950a1ba-9889-463d-9f3e-6c1ed778c1d3" class="code"><code class="language-JavaScript">if (result.length === 0) {
+    return res.status(404).json({ message: &#x27;Product not found&#x27; });
+}
+res.status(200).json(result);</code></pre></li></ol><p id="d6f8c78f-dbfa-422a-a3e6-e503d01ea516" class="">
+</p><h3 id="f5c80cbc-4c5e-4b5f-ad83-b4dc54fbb2f5" class=""><strong>Refactored Code:</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="a9a4aef0-c71e-48c7-a662-cca96e6e5cc2" class="code"><code class="language-JavaScript" style="white-space:pre-wrap;word-break:break-all">app.get(&#x27;/product/:productId&#x27;, (req, res) =&gt; {
+    const productId = req.params.productId;
+    
+    // Use a parameterized query to prevent SQL injection
+    const query = &#x27;SELECT * FROM products WHERE id = ?&#x27;;
+    db.query(query, [productId], (err, result) =&gt; {
+        if (err) {
+         // Log the error for debugging purposes
+            console.error(err); 
+            
+         // Send a 500 Internal Server Error response with a generic message
+            return res.status(500).send(&#x27;Internal Server Error&#x27;);
+        }
+        if (result.length === 0) {
+            return res.status(404).send(&#x27;Product not found&#x27;);
+        }
+        res.status(200).send(result);
+    });
+});
+</code></pre><p id="038eaf73-5fa8-4ae3-87b4-be4a8edeab67" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

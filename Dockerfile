@@ -30,4 +30,4 @@ COPY . .
 RUN pnpm run build 
 
 # Run e2e tests first, and if they pass, start the application
-CMD pnpm run test:e2e --detectOpenHandles && pnpm run start:prod
+CMD pnpm run test && pnpm run test:e2e --detectOpenHandles && pnpm run start:prod

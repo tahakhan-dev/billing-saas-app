@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SubscriptionPlanEntity } from './entities/subscription-plan.entity';
 import { UpdateSubscriptionPlanDto } from './dto/update-subscription.dto';
 import { CreateSubscriptionPlanDto } from './dto/create-subscription.dto';
 import { SubscriptionService } from './subscription.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.gaurd';
 
 @ApiTags('Subscription Plans')
 @Controller('subscription')
@@ -20,6 +21,7 @@ export class SubscriptionController {
     return plan;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'List all subscription plans' })
@@ -28,6 +30,7 @@ export class SubscriptionController {
     return await this.subscriptionService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Retrieve a specific subscription plan by ID' })
@@ -42,6 +45,7 @@ export class SubscriptionController {
     return plan;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/:id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update a subscription plan' })
@@ -56,6 +60,7 @@ export class SubscriptionController {
     return updatedPlan;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a subscription plan' })

@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 import { InvoiceEntity } from './entities/invoice.entity';
+import { JwtAuthGuard } from '../auth/jwt-auth.gaurd';
 import { InvoiceService } from './invoice.service';
 
 @ApiTags('Invoices')
@@ -11,6 +12,7 @@ export class InvoiceController {
   constructor(private readonly invoiceService: InvoiceService) { }
 
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiBearerAuth()
   @HttpCode(HttpStatus.CREATED)
@@ -20,6 +22,7 @@ export class InvoiceController {
     return await this.invoiceService.create(createInvoiceDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
@@ -29,6 +32,7 @@ export class InvoiceController {
     return await this.invoiceService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/:id')
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
@@ -44,6 +48,7 @@ export class InvoiceController {
     return invoice;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/:id')
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
@@ -60,6 +65,7 @@ export class InvoiceController {
     return updatedInvoice;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
   @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
