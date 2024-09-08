@@ -30,7 +30,6 @@ import { TerminusModule } from '@nestjs/terminus';
 import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
-import { CqrsModule } from '@nestjs/cqrs';
 import 'dotenv/config';
 
 
@@ -40,7 +39,6 @@ import 'dotenv/config';
     ScheduleModule.forRoot(),
     EnvConfigModule.forRoot(), // initializing config module for whole module,
     // Module listing
-    CqrsModule,
     InvoiceModule,
     PaymentModule,
     CustomerModule,

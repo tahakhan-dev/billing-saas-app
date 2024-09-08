@@ -1,11 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { CreateSubscriptionPlanDto } from './dto/create-subscription.dto';
+import { SubscriptionPlanStatus } from 'src/common/enums/generic.enum';
 import { SubscriptionController } from './subscription.controller';
 import { SubscriptionService } from './subscription.service';
-import { CreateSubscriptionPlanDto } from './dto/create-subscription.dto';
-import { UpdateSubscriptionPlanDto } from './dto/update-subscription.dto';
-import { SubscriptionPlanEntity } from './entities/subscription-plan.entity';
+import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
-import { SubscriptionPlanStatus } from 'src/common/enums/generic.enum';
+
 
 describe('SubscriptionController', () => {
   let controller: SubscriptionController;
@@ -48,7 +47,7 @@ describe('SubscriptionController', () => {
         status: SubscriptionPlanStatus.ACTIVE,
       };
 
-      const result = { id: 1, ...createDto } as SubscriptionPlanEntity;
+      const result = { id: 1, ...createDto } as any;
 
       jest.spyOn(service, 'create').mockResolvedValue(result);
 

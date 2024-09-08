@@ -18,6 +18,7 @@ describe('App E2E', () => {
   let invoiceRepository: Repository<InvoiceEntity>;
   let paymentRepository: Repository<PaymentEntity>;
   let subscriptionPlanRepository: Repository<SubscriptionPlanEntity>;
+  let accessToken: string; // Store the JWT access token
 
 
   beforeAll(async () => {
@@ -79,6 +80,10 @@ describe('App E2E', () => {
           subscriptionPlanId: subscriptionPlan.id,
         })
         .expect(201);
+      // Extract and store the access token
+      accessToken = response.body.data.accessToken;
+
+      // Validate the customer creation response
       expect(response.body.data.customer.name).toBe('John Doe');
     });
   });
@@ -104,6 +109,7 @@ describe('App E2E', () => {
     it('should create an invoice', async () => {
       const response = await request(app.getHttpServer())
         .post('/invoice')
+        .set('Authorization', `Bearer ${accessToken}`)  // Pass JWT token in header
         .send({
           customerId: customer.id,
           subscriptionPlanId: customer.subscriptionPlan.id,
@@ -123,6 +129,7 @@ describe('App E2E', () => {
 
       const response = await request(app.getHttpServer())
         .post('/payment')
+        .set('Authorization', `Bearer ${accessToken}`)  // Pass JWT token in header
         .send({
           invoiceId: invoice.id,
           amount: 9.99,
@@ -148,8 +155,10 @@ describe('App E2E', () => {
         status: 'failed',
       });
 
-      const response = await request(app.getHttpServer()).patch(`/payment/${payment.id}/fail`).expect(200);
-
+      const response = await request(app.getHttpServer())
+        .patch(`/payment/${payment.id}/fail`)
+        .set('Authorization', `Bearer ${accessToken}`)  // Pass JWT token in header
+        .expect(200);
       expect(response.body.status).toBe('paid');
     });
   });

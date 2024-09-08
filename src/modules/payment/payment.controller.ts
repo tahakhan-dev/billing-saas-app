@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { PaymentEntity } from './entities/payment.entity';
+import { JwtAuthGuard } from '../auth/jwt-auth.gaurd';
 import { PaymentService } from './payment.service';
 
 @ApiTags('Payments')
@@ -10,6 +11,7 @@ import { PaymentService } from './payment.service';
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) { }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiBearerAuth()
   @HttpCode(HttpStatus.CREATED)
@@ -19,6 +21,7 @@ export class PaymentController {
     return await this.paymentService.create(createPaymentDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch('/:id/fail')
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
@@ -30,6 +33,7 @@ export class PaymentController {
   }
 
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
@@ -39,6 +43,7 @@ export class PaymentController {
     return await this.paymentService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/:id')
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
@@ -54,6 +59,7 @@ export class PaymentController {
     return payment;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/:id')
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
@@ -70,6 +76,7 @@ export class PaymentController {
     return updatedPayment;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
   @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)

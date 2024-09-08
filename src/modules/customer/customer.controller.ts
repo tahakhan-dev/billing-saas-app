@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpCode, HttpStatus, NotFoundException, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
@@ -30,6 +30,7 @@ export class CustomerController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/:id/assign-subscription/:subscriptionPlanId')
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
@@ -58,8 +59,22 @@ export class CustomerController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @Put('/:id/subscription-upgrade-downgrade')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Upgrade or downgrade a customer subscription plan with prorated billing' })
+  @ApiResponse({ status: 200, description: 'Subscription updated successfully and prorated invoice generated.' })
+  @ApiResponse({ status: 404, description: 'Customer or subscription plan not found.' })
+  @ApiParam({ name: 'id', type: 'number', description: 'Customer ID' })
+  async upgradeOrDowngradeSubscription(@Param('id') id: number, @Body() body: { newPlanId: number }) {
+    const { newPlanId } = body;
+    const result = await this.customerService.upgradeOrDowngradeSubscription(id, newPlanId);
+    return result;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get()
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'List all customers' })
   @ApiResponse({ status: 200, description: 'Returned all customers successfully, might be empty if no customers are found', type: [CustomerEntity] })
@@ -68,6 +83,7 @@ export class CustomerController {
   }
 
 
+  @UseGuards(JwtAuthGuard)
   @Get('/:id')
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
@@ -84,6 +100,7 @@ export class CustomerController {
   }
 
 
+  @UseGuards(JwtAuthGuard)
   @Put('/:id')
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
@@ -100,6 +117,7 @@ export class CustomerController {
   }
 
 
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
   @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
